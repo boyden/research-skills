@@ -1,0 +1,49 @@
+Bioicons — https://bioicons.com — https://github.com/duerrsimon/bioicons
+
+ICONS: licensed individually. Each icon's licence and author are given by its path in the
+repository, static/icons/<license>/<category>/<author>/<name>.svg. The upstream README says:
+
+  "Please always cite the individual icons and their respective license."
+  "Note that if the icon is licensed as CC BY you still need attribute and state the
+  modifications made."
+  Example citation: "bilharzie-egg icon by Servier https://smart.servier.com/ is licensed
+  under CC-BY 3.0 Unported https://creativecommons.org/licenses/by/3.0/"
+
+Icons in this folder (file here <- upstream path under static/icons/, retrieved 2026-10-01):
+
+  CC0 1.0 (public domain, no attribution required)
+    neural-network.svg      <- cc-0/Machine_Learning/Simon_Dürr/neural-network-1.svg
+    autoencoder.svg         <- cc-0/Machine_Learning/Simon_Dürr/autoencoder.svg
+    automation.svg          <- cc-0/Machine_Learning/Simon_Dürr/automation.svg
+    pipeline.svg            <- cc-0/Machine_Learning/Simon_Dürr/pipeline.svg
+    supercomputer.svg       <- cc-0/Computer_hardware/Simon_Dürr/supercomputer.svg
+    microscope-cartoon.svg  <- cc-0/Lab_apparatus/Derek-Croote/microscope-cartoon.svg
+    single-cell-umap.svg    <- cc-0/Scientific_graphs/James-Lloyd/SingleCell_Clustering_DataReduction_UMAP.svg
+    cell-group.svg          <- cc-0/Cell_types/JhonnyXC/cell_group.svg
+    single-cell-droplet.svg <- cc-0/Lab_apparatus/Xi-Chen/singlecell_droplet_overloading.svg
+    patient.svg             <- cc-0/Human_physiology/Marcel_Tisch/patient.svg
+
+  CC BY 4.0 (attribution required) — https://creativecommons.org/licenses/by/4.0/
+    attention-mechanism.svg <- cc-by-4.0/Machine_Learning/Noelia_Ferruz/Attention-mechanism.svg      (Noelia Ferruz)
+    expression-heatmap.svg  <- cc-by-4.0/Scientific_graphs/ChenxinLi/heatmap.svg                     (Chenxin Li)
+    volcano-plot.svg        <- cc-by-4.0/Chemo-_and_Bioinformatics/Lucas-Diedrich/differential_gene_expression.svg (Lucas Diedrich)
+    confocal-microscope.svg <- cc-by-4.0/Lab_apparatus/DBCLS/confocal-scanning-laser-microscope-CSLM.svg (DBCLS / TogoTV)
+
+  CC BY 3.0 Unported (attribution required) — https://creativecommons.org/licenses/by/3.0/
+    glass-slide.svg         <- cc-by-3.0/Lab_apparatus/Servier/glassslide-top.svg                    (Servier Medical Art)
+    carcinoma.svg           <- cc-by-3.0/Oncology/Servier/carcinoma.svg                              (Servier Medical Art)
+    epithelium.svg          <- cc-by-3.0/Tissues/Servier/epithelium-stratified-columnar.svg          (Servier Medical Art)
+
+The SVGs are unmodified copies; only the file names were changed. The PNGs in ../png/bioicons/
+are rasterised at 512 x 512 with their original colours (no recolouring).
+
+WEBSITE CODE: the repository's LICENSE file (MIT) covers the Bioicons web app, not the icons:
+
+Copyright 2021 Simon Duerr (nuxt js based webapp)
+Copyright 2020 Zaydek Michels-Gualtieri (original layout)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

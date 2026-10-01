@@ -1,0 +1,105 @@
+topic,name,source,upstream_path,license,author,note
+AI / machine learning,brain-circuit,lucide,icons/brain-circuit.svg,ISC,Lucide contributors,AI model
+AI / machine learning,brain-cog,lucide,icons/brain-cog.svg,ISC,Lucide contributors,training
+AI / machine learning,network,lucide,icons/network.svg,ISC,Lucide contributors,network / graph
+AI / machine learning,cpu,lucide,icons/cpu.svg,ISC,Lucide contributors,compute
+AI / machine learning,gpu,lucide,icons/gpu.svg,ISC,Lucide contributors,GPU
+AI / machine learning,layers,lucide,icons/layers.svg,ISC,Lucide contributors,model layers
+AI / machine learning,sparkles,lucide,icons/sparkles.svg,ISC,Lucide contributors,AI / generative
+AI / machine learning,brain,tabler,icons/outline/brain.svg,MIT,Tabler Icons contributors,AI / intelligence
+AI / machine learning,model-ai,tabler,icons/outline/model-ai.svg,MIT,Tabler Icons contributors,AI model
+AI / machine learning,chart-scatter-3d,tabler,icons/outline/chart-scatter-3d.svg,MIT,Tabler Icons contributors,embeddings
+AI / machine learning,cube-spark,tabler,icons/outline/cube-spark.svg,MIT,Tabler Icons contributors,foundation model
+AI / machine learning,neural-network,bioicons,static/icons/cc-0/Machine_Learning/Simon_Dürr/neural-network-1.svg,CC0-1.0,Simon Dürr,neural network (multi-colour)
+AI / machine learning,attention-mechanism,bioicons,static/icons/cc-by-4.0/Machine_Learning/Noelia_Ferruz/Attention-mechanism.svg,CC-BY-4.0,Noelia Ferruz,attention / transformer (multi-colour)
+AI / machine learning,autoencoder,bioicons,static/icons/cc-0/Machine_Learning/Simon_Dürr/autoencoder.svg,CC0-1.0,Simon Dürr,encoder-decoder (multi-colour)
+LLM,message-square-text,lucide,icons/message-square-text.svg,ISC,Lucide contributors,chat message
+LLM,messages-square,lucide,icons/messages-square.svg,ISC,Lucide contributors,conversation
+LLM,bot-message-square,lucide,icons/bot-message-square.svg,ISC,Lucide contributors,chatbot
+LLM,text-cursor-input,lucide,icons/text-cursor-input.svg,ISC,Lucide contributors,prompt input
+LLM,whole-word,lucide,icons/whole-word.svg,ISC,Lucide contributors,tokens / words
+LLM,languages,lucide,icons/languages.svg,ISC,Lucide contributors,language
+LLM,pencil-sparkles,lucide,icons/pencil-sparkles.svg,ISC,Lucide contributors,text generation
+LLM,book-open-text,lucide,icons/book-open-text.svg,ISC,Lucide contributors,text corpus
+LLM,message-chatbot,tabler,icons/outline/message-chatbot.svg,MIT,Tabler Icons contributors,chatbot
+LLM,prompt,tabler,icons/outline/prompt.svg,MIT,Tabler Icons contributors,prompt
+LLM,message-sparkle,tabler,icons/outline/message-sparkle.svg,MIT,Tabler Icons contributors,generated reply
+LLM,file-text-ai,tabler,icons/outline/file-text-ai.svg,MIT,Tabler Icons contributors,generated document
+LLM,letter-case,tabler,icons/outline/letter-case.svg,MIT,Tabler Icons contributors,tokens / text
+VLM / multimodal,scan-eye,lucide,icons/scan-eye.svg,ISC,Lucide contributors,vision
+VLM / multimodal,scan-text,lucide,icons/scan-text.svg,ISC,Lucide contributors,read text in image
+VLM / multimodal,image,lucide,icons/image.svg,ISC,Lucide contributors,image input
+VLM / multimodal,images,lucide,icons/images.svg,ISC,Lucide contributors,image set
+VLM / multimodal,eye,lucide,icons/eye.svg,ISC,Lucide contributors,vision
+VLM / multimodal,photo-ai,tabler,icons/outline/photo-ai.svg,MIT,Tabler Icons contributors,image + AI
+VLM / multimodal,camera-ai,tabler,icons/outline/camera-ai.svg,MIT,Tabler Icons contributors,vision model
+VLM / multimodal,eye-spark,tabler,icons/outline/eye-spark.svg,MIT,Tabler Icons contributors,vision model
+VLM / multimodal,photo-scan,tabler,icons/outline/photo-scan.svg,MIT,Tabler Icons contributors,image understanding
+VLM / multimodal,subtitles-ai,tabler,icons/outline/subtitles-ai.svg,MIT,Tabler Icons contributors,captioning
+VLM / multimodal,text-scan-ai,tabler,icons/outline/text-scan-ai.svg,MIT,Tabler Icons contributors,image to text
+AI agents,bot,lucide,icons/bot.svg,ISC,Lucide contributors,agent / bot
+AI agents,workflow,lucide,icons/workflow.svg,ISC,Lucide contributors,workflow
+AI agents,wrench,lucide,icons/wrench.svg,ISC,Lucide contributors,tool use
+AI agents,toolbox,lucide,icons/toolbox.svg,ISC,Lucide contributors,tool set
+AI agents,list-checks,lucide,icons/list-checks.svg,ISC,Lucide contributors,planning / task list
+AI agents,route,lucide,icons/route.svg,ISC,Lucide contributors,plan / trajectory
+AI agents,repeat,lucide,icons/repeat.svg,ISC,Lucide contributors,agent loop
+AI agents,robot,tabler,icons/outline/robot.svg,MIT,Tabler Icons contributors,robot
+AI agents,robot-face,tabler,icons/outline/robot-face.svg,MIT,Tabler Icons contributors,robot
+AI agents,ai-agent,tabler,icons/outline/ai-agent.svg,MIT,Tabler Icons contributors,AI agent
+AI agents,ai-agents,tabler,icons/outline/ai-agents.svg,MIT,Tabler Icons contributors,multi-agent
+AI agents,automation,tabler,icons/outline/automation.svg,MIT,Tabler Icons contributors,automation
+AI agents,subtask,tabler,icons/outline/subtask.svg,MIT,Tabler Icons contributors,task decomposition
+AI agents,api,tabler,icons/outline/api.svg,MIT,Tabler Icons contributors,API / tool call
+AI agents,automation,bioicons,static/icons/cc-0/Machine_Learning/Simon_Dürr/automation.svg,CC0-1.0,Simon Dürr,automation (multi-colour)
+Computational pathology,microscope,healthicons,public/icons/svg/outline/devices/microscope.svg,CC0-1.0,Health Icons,microscope
+Computational pathology,biopsy,healthicons,public/icons/svg/outline/diagnostics/biopsy.svg,CC0-1.0,Health Icons,biopsy
+Computational pathology,tissue,healthicons,public/icons/svg/outline/body/tissue.svg,CC0-1.0,Health Icons,tissue
+Computational pathology,cell-nuclei,healthicons,public/icons/svg/outline/body/cell-nuclei.svg,CC0-1.0,Health Icons,cells / nuclei
+Computational pathology,microscope-with-specimen,healthicons,public/icons/svg/outline/devices/microscope-with_specimen.svg,CC0-1.0,Health Icons,microscope with slide
+Computational pathology,cancerous-cell-nuclei,healthicons,public/icons/svg/outline/conditions/cancerous-cell_nuclei.svg,CC0-1.0,Health Icons,tumour nuclei
+Computational pathology,medical-sample,healthicons,public/icons/svg/outline/devices/medical-sample.svg,CC0-1.0,Health Icons,specimen
+Computational pathology,microscope,lucide,icons/microscope.svg,ISC,Lucide contributors,microscope (line style)
+Computational pathology,scan,lucide,icons/scan.svg,ISC,Lucide contributors,scanner / field of view
+Computational pathology,grid-3x3,lucide,icons/grid-3x3.svg,ISC,Lucide contributors,tiles / patches
+Computational pathology,grid-scan,tabler,icons/outline/grid-scan.svg,MIT,Tabler Icons contributors,tiling a slide
+Computational pathology,lasso-polygon,tabler,icons/outline/lasso-polygon.svg,MIT,Tabler Icons contributors,segmentation / annotation
+Computational pathology,microscope-cartoon,bioicons,static/icons/cc-0/Lab_apparatus/Derek-Croote/microscope-cartoon.svg,CC0-1.0,Derek Croote,microscope (black and white)
+Computational pathology,glass-slide,bioicons,static/icons/cc-by-3.0/Lab_apparatus/Servier/glassslide-top.svg,CC-BY-3.0,Servier,glass slide (multi-colour)
+Computational pathology,carcinoma,bioicons,static/icons/cc-by-3.0/Oncology/Servier/carcinoma.svg,CC-BY-3.0,Servier,tumour cells (multi-colour)
+Computational pathology,epithelium,bioicons,static/icons/cc-by-3.0/Tissues/Servier/epithelium-stratified-columnar.svg,CC-BY-3.0,Servier,epithelium (multi-colour)
+Spatial omics,dna,healthicons,public/icons/svg/outline/body/dna.svg,CC0-1.0,Health Icons,DNA
+Spatial omics,dna,lucide,icons/dna.svg,ISC,Lucide contributors,DNA / genes
+Spatial omics,dna-2,tabler,icons/outline/dna-2.svg,MIT,Tabler Icons contributors,DNA / RNA
+Spatial omics,chart-network,lucide,icons/chart-network.svg,ISC,Lucide contributors,cell graph
+Spatial omics,topology-star-ring,tabler,icons/outline/topology-star-ring.svg,MIT,Tabler Icons contributors,cell neighbourhood
+Spatial omics,chart-grid-dots,tabler,icons/outline/chart-grid-dots.svg,MIT,Tabler Icons contributors,spatial map
+Spatial omics,grid-dots,tabler,icons/outline/grid-dots.svg,MIT,Tabler Icons contributors,spot array
+Spatial omics,hexagons,tabler,icons/outline/hexagons.svg,MIT,Tabler Icons contributors,hexagonal spots / bins
+Spatial omics,map-pinned,lucide,icons/map-pinned.svg,ISC,Lucide contributors,spatial location
+Spatial omics,stack-2,tabler,icons/outline/stack-2.svg,MIT,Tabler Icons contributors,multiplex channels
+Spatial omics,single-cell-umap,bioicons,static/icons/cc-0/Scientific_graphs/James-Lloyd/SingleCell_Clustering_DataReduction_UMAP.svg,CC0-1.0,James Lloyd,single-cell UMAP (multi-colour)
+Spatial omics,expression-heatmap,bioicons,static/icons/cc-by-4.0/Scientific_graphs/ChenxinLi/heatmap.svg,CC-BY-4.0,Chenxin Li,gene expression heatmap (multi-colour)
+Spatial omics,volcano-plot,bioicons,static/icons/cc-by-4.0/Chemo-_and_Bioinformatics/Lucas-Diedrich/differential_gene_expression.svg,CC-BY-4.0,Lucas Diedrich,differential expression (multi-colour)
+Spatial omics,cell-group,bioicons,static/icons/cc-0/Cell_types/JhonnyXC/cell_group.svg,CC0-1.0,JhonnyXC,cell cluster (multi-colour)
+Spatial omics,single-cell-droplet,bioicons,static/icons/cc-0/Lab_apparatus/Xi-Chen/singlecell_droplet_overloading.svg,CC0-1.0,Xi Chen,single-cell droplets (multi-colour)
+Spatial omics,confocal-microscope,bioicons,static/icons/cc-by-4.0/Lab_apparatus/DBCLS/confocal-scanning-laser-microscope-CSLM.svg,CC-BY-4.0,DBCLS,imaging system (multi-colour)
+Generic science / data,regular-patient,healthicons,public/icons/svg/outline/people/regular-patient.svg,CC0-1.0,Health Icons,patient
+Generic science / data,chart-line,healthicons,public/icons/svg/outline/graphs/chart-line.svg,CC0-1.0,Health Icons,line chart
+Generic science / data,laptop,healthicons,public/icons/svg/outline/objects/laptop.svg,CC0-1.0,Health Icons,computer
+Generic science / data,people,healthicons,public/icons/svg/outline/people/people.svg,CC0-1.0,Health Icons,cohort
+Generic science / data,database,healthicons,public/icons/svg/outline/symbols/database.svg,CC0-1.0,Health Icons,database
+Generic science / data,hospital,healthicons,public/icons/svg/outline/places/hospital.svg,CC0-1.0,Health Icons,hospital / site
+Generic science / data,users,lucide,icons/users.svg,ISC,Lucide contributors,cohort
+Generic science / data,chart-scatter,lucide,icons/chart-scatter.svg,ISC,Lucide contributors,scatter plot
+Generic science / data,chart-column,lucide,icons/chart-column.svg,ISC,Lucide contributors,bar chart
+Generic science / data,chart-histogram,tabler,icons/outline/chart-histogram.svg,MIT,Tabler Icons contributors,distribution
+Generic science / data,sigma,lucide,icons/sigma.svg,ISC,Lucide contributors,statistics
+Generic science / data,trending-down,lucide,icons/trending-down.svg,ISC,Lucide contributors,decline / survival
+Generic science / data,cloud,lucide,icons/cloud.svg,ISC,Lucide contributors,cloud
+Generic science / data,code,lucide,icons/code.svg,MIT (Feather),Cole Bemis / Lucide contributors,code
+Generic science / data,clipboard-list,lucide,icons/clipboard-list.svg,ISC,Lucide contributors,clinical data / protocol
+Generic science / data,report-medical,tabler,icons/outline/report-medical.svg,MIT,Tabler Icons contributors,medical record
+Generic science / data,patient,bioicons,static/icons/cc-0/Human_physiology/Marcel_Tisch/patient.svg,CC0-1.0,Marcel Tisch,patient (multi-colour)
+Generic science / data,supercomputer,bioicons,static/icons/cc-0/Computer_hardware/Simon_Dürr/supercomputer.svg,CC0-1.0,Simon Dürr,compute cluster (multi-colour)
+Generic science / data,pipeline,bioicons,static/icons/cc-0/Machine_Learning/Simon_Dürr/pipeline.svg,CC0-1.0,Simon Dürr,processing pipeline (multi-colour)
