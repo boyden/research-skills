@@ -1,0 +1,13 @@
+# Build products are rebuilt from the sources at any time: wip and release pptx / pdf, PNG previews.
+output/*.pptx
+output/*.pdf
+output/*_png/
+# The full-build lock and the temp files of an interrupted build.
+output/.*
+# pages.json is tracked (output/*.pages.json): the outline's {{key}} references resolve against it, so
+# pages.py --check works on a fresh checkout without node or LibreOffice, and its diff records page moves.
+# Figures (figures/*.png, figures/run_meta/) are tracked: the build reads them and does not draw them.
+# Backups written by pages.py --table --write and pull_notes.py --write.
+.backups/
+notes/_unmatched.json
+__pycache__/

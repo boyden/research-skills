@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Contact sheet of all grey icon PNGs, grouped by topic (order and topics from manifest.csv).
+"""Contact sheet of all gray ("grey" variant) icon PNGs, grouped by topic (order and topics from manifest.csv).
 
 Writes examples/icons/icon_sheet.png. Needs matplotlib; run render_pngs.py first.
     python3 examples/icons/make_icon_sheet.py

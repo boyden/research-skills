@@ -1,0 +1,15 @@
+[
+ {"page": 1, "title": "Recurrence-free Survival", "section": "results", "order": 10, "builder": "sKm"},
+ {"page": 2, "title": "Discrimination — ROC", "section": "results", "order": 20, "builder": "sRoc"},
+ {"page": 3, "title": "Clinical Factors — Univariate Cox", "section": "results", "order": 30, "builder": "sForest"},
+ {"page": 4, "title": "Cohort Characteristics", "section": "results", "order": 40, "builder": "sCohortTable"},
+ {"page": 5, "title": "Study at a Glance", "section": "results", "order": 50, "builder": "sKeyNumbers"},
+ {"page": 6, "title": "Single Predictors of ER Status", "section": "results", "order": 60, "builder": "sTakeaways"},
+ {"page": 7, "title": "Reading the Kaplan–Meier Panel", "section": "results", "order": 70, "builder": "sCallout"},
+ {"page": 8, "title": "Clinical Factors — Univariate Cox", "section": "results", "order": 80, "builder": "sEmphasis1"},
+ {"page": 9, "title": "Clinical Factors — Univariate Cox", "section": "results", "order": 90, "builder": "sEmphasis2"},
+ {"page": 10, "title": "Feature Definitions", "section": "results", "order": 100, "builder": "sFeatureDefs"},
+ {"page": 11, "title": "Model Comparison — C-index", "section": "results", "order": 110, "builder": "sModels"},
+ {"page": 12, "title": "Tamoxifen — Adjusted Hazard Ratio", "section": "results", "order": 120, "builder": "sAdjusted"},
+ {"page": 13, "title": "Supplementary — Univariate vs Multivariable", "section": "supplementary", "order": 10, "builder": "sSuppTable"}
+]

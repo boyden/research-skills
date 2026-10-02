@@ -1,0 +1,5 @@
+[{"page":1,"title":"Title","section":"title","order":10,"builder":"sTitle"},
+ {"page":2,"title":"Hormone Therapy — Recurrence-free Survival","section":"results","order":10,"builder":"sKm"},
+ {"page":3,"title":"Clinical Factors — Univariate Cox","section":"results","order":20,"builder":"sForest"},
+ {"page":4,"title":"Summary","section":"summary","order":10,"builder":"sSummary"},
+ {"page":5,"title":"Supplementary — Cohort Characteristics","section":"supplementary","order":10,"builder":"sSuppTable"}]

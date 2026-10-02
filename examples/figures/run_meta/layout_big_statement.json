@@ -1,0 +1,65 @@
+{
+ "figure": "layout_big_statement",
+ "png": "layout_big_statement.png",
+ "module": "plotting.layouts",
+ "stats": {
+  "layout": "big statement",
+  "slide_in": [
+   13.333,
+   7.5
+  ],
+  "boxes_in": {
+   "title": [
+    0.59,
+    0.36,
+    9.6,
+    0.6
+   ],
+   "logo": [
+    10.983,
+    0.2,
+    2.0,
+    0.35
+   ],
+   "page": [
+    12.363,
+    7.0,
+    0.6,
+    0.3
+   ],
+   "source": [
+    6.4,
+    7.05,
+    5.88,
+    0.33
+   ],
+   "accent_bar": [
+    0.6,
+    1.75,
+    0.08,
+    1.35
+   ],
+   "statement": [
+    0.95,
+    1.7,
+    11.533,
+    1.45
+   ],
+   "bullets": [
+    0.95,
+    3.75,
+    11.533,
+    2.3
+   ]
+  },
+  "geometry": "engine/themes/neutral/theme.json and examples/slides/*/slides/*.js"
+ },
+ "inputs": [],
+ "versions": {
+  "python": "3.10.13",
+  "matplotlib": "3.10.7",
+  "numpy": "1.26.4"
+ },
+ "created": "2026-10-01T21:54:35-04:00",
+ "theme": "/mnt/data1/bal753/research-skills/skills/results-deck/engine/themes/neutral"
+}

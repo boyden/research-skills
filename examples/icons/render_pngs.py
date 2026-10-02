@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Render every icon SVG under examples/icons/<source>/ to 512 x 512 transparent PNGs.
 
-Output: examples/icons/png/<source>/<name>.png (grey #595959) and, for single-colour icons,
-examples/icons/png/<source>/<name>_accent.png (accent #A51C30). Multi-colour icons (most
-Bioicons) are rendered with their own colours and get no ``_accent`` variant.
+Output: examples/icons/png/<source>/<name>.png (gray #595959, the "grey" variant) and, for
+single-color icons, examples/icons/png/<source>/<name>_accent.png (accent #A51C30). Multi-color
+icons (most Bioicons) are rendered with their own colors and get no ``_accent`` variant.
+For a deck's own theme colors use skills/results-deck/engine/tools/theme_icons.py instead.
 
-The SVGs on disk stay unmodified: a recoloured copy with width/height 512 is written to a
+The SVGs on disk stay unmodified: a recolored copy with width/height 512 is written to a
 temporary directory and screenshotted by headless Chrome (LibreOffice < 7.4 cannot draw SVGs
 embedded in pptx, so slides use the PNGs). Existing PNGs are skipped unless --force.
 
@@ -38,7 +39,7 @@ NEUTRAL = {"none", "transparent", "currentcolor", "inherit", "url"}
 
 
 def colours(svg):
-    """Distinct explicit colours in the SVG (lower-case, excluding none/currentColor)."""
+    """Distinct explicit colors in the SVG (lower-case, excluding none/currentColor)."""
     found = {c.lower() for c in COLOR_RE.findall(svg)}
     found = {c for c in found if c not in NEUTRAL}
     expand = {"#fff": "#ffffff", "white": "#ffffff", "#000": "#000000", "black": "#000000"}
@@ -46,10 +47,10 @@ def colours(svg):
 
 
 def is_single_colour(svg):
-    """currentColor icons, or icons drawn in exactly one explicit colour (or none at all)."""
+    """currentColor icons, or icons drawn in exactly one explicit color (or none at all)."""
     if "currentColor" in svg:
         return True
-    if "<image" in svg:  # embedded raster: cannot be recoloured
+    if "<image" in svg:  # embedded raster: cannot be recolored
         return False
     return len(colours(svg)) <= 1
 
@@ -61,7 +62,7 @@ def recolour(svg, colour):
     if len(cols) == 1:
         (old,) = cols
         return re.sub(re.escape(old), colour, svg, flags=re.I)
-    # no explicit colour: default fill is black, so set fill on the root element
+    # no explicit color: default fill is black, so set fill on the root element
     return re.sub(r"<svg\b", f'<svg fill="{colour}"', svg, count=1)
 
 

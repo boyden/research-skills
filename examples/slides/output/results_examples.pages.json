@@ -1,0 +1,13 @@
+[{"page":1,"title":"Recurrence-free Survival","section":"results","order":10,"builder":"sKmSurvival"},
+ {"page":2,"title":"Discrimination — ROC","section":"results","order":20,"builder":"sRocTwoPanels"},
+ {"page":3,"title":"Clinical Factors — Univariate Cox","section":"results","order":30,"builder":"sForestPlot"},
+ {"page":4,"title":"Cohort Characteristics","section":"results","order":40,"builder":"sCohortTable"},
+ {"page":5,"title":"Study at a Glance","section":"results","order":50,"builder":"sKeyNumbers"},
+ {"page":6,"title":"Single Predictors of ER Status","section":"results","order":60,"builder":"sAucTakeaways"},
+ {"page":7,"title":"Reading the Kaplan–Meier Panel","section":"results","order":70,"builder":"sKmCallout"},
+ {"page":8,"title":"Clinical Factors — Univariate Cox","section":"results","order":80,"builder":"sForestEmphasis1"},
+ {"page":9,"title":"Clinical Factors — Univariate Cox","section":"results","order":90,"builder":"sForestEmphasis2"},
+ {"page":10,"title":"Feature Definitions","section":"results","order":100,"builder":"sFeatureDefinitions"},
+ {"page":11,"title":"Model Comparison — C-index","section":"results","order":110,"builder":"sModelComparison"},
+ {"page":12,"title":"Tamoxifen — Adjusted Hazard Ratio","section":"results","order":120,"builder":"sDraftAdjustedHr"},
+ {"page":13,"title":"Supplementary — Univariate vs Multivariable","section":"supplementary","order":10,"builder":"sSuppMultivariable"}]

@@ -1,14 +1,16 @@
 {
-  "figure": "three_line_table_example",
-  "png": "three_line_table_example.png",
-  "script": "make_example_figures.py",
-  "data": "GBSG2 trial, lifelines.datasets.load_gbsg2",
-  "versions": {
-    "lifelines": "0.30.0",
-    "matplotlib": "3.10.7"
-  },
-  "created": "2026-10-01T17:29:23",
-  "stats": {
-    "n": 686
-  }
+ "figure": "three_line_table_example",
+ "png": "three_line_table_example.png",
+ "module": "plotting.tables",
+ "stats": {
+  "n": 686
+ },
+ "inputs": [],
+ "versions": {
+  "python": "3.10.13",
+  "matplotlib": "3.10.7",
+  "numpy": "1.26.4"
+ },
+ "created": "2026-10-01T21:20:10-04:00",
+ "theme": "/mnt/data1/bal753/research-skills/skills/results-deck/engine/themes/neutral"
 }

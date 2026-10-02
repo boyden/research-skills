@@ -1,0 +1,9 @@
+{
+ "name": "plot_fixture",
+ "source": null,
+ "dpi": 40,
+ "plot": {"ink": "222222", "muted": "6B6B6B", "grid": "E6E6E6", "low": "C0392B", "high": "2A78D6", "mid": "8A8A8A"},
+ "font": {"plot": ["DejaVu Sans"]},
+ "size": {"plotBase": 12, "plotMin": 11},
+ "geometry": {"full": [4.0, 2.0], "half": [2.0, 2.0]}
+}

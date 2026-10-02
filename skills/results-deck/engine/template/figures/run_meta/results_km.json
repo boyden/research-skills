@@ -1,0 +1,128 @@
+{
+ "figure": "results_km",
+ "png": "results_km.png",
+ "module": "plotting.results",
+ "stats": {
+  "hormone_therapy": {
+   "hr": 0.6948847871537287,
+   "lo": 0.5438444309341748,
+   "hi": 0.8878731489228531,
+   "p": 0.0036023233045058417,
+   "c": 0.543262294096429,
+   "n": 686,
+   "events": 299,
+   "logrank_p": 0.0034272822647457898
+  },
+  "log_pnodes": {
+   "hr": 1.6499307055679713,
+   "lo": 1.4786105610102522,
+   "hi": 1.8411009666507776,
+   "p": 3.488857009285825e-19,
+   "c": 0.6452446795719611,
+   "n": 686,
+   "events": 299,
+   "logrank_p": 1.714744315405684e-16,
+   "median_split": 3.0
+  },
+  "cohort": {
+   "all": {
+    "n": 686,
+    "age": {
+     "median": 53.0,
+     "q1": 46.0,
+     "q3": 61.0
+    },
+    "postmenopausal": {
+     "n": 396,
+     "pct": 57.7259475218659
+    },
+    "tumor_size_mm": {
+     "median": 25.0,
+     "q1": 20.0,
+     "q3": 35.0
+    },
+    "grade_3": {
+     "n": 161,
+     "pct": 23.46938775510204
+    },
+    "positive_nodes": {
+     "median": 3.0,
+     "q1": 1.0,
+     "q3": 7.0
+    },
+    "events": {
+     "n": 299,
+     "pct": 43.58600583090379
+    }
+   },
+   "tamoxifen": {
+    "n": 246,
+    "age": {
+     "median": 58.0,
+     "q1": 50.0,
+     "q3": 63.0
+    },
+    "postmenopausal": {
+     "n": 187,
+     "pct": 76.01626016260163
+    },
+    "tumor_size_mm": {
+     "median": 25.0,
+     "q1": 20.0,
+     "q3": 35.0
+    },
+    "grade_3": {
+     "n": 50,
+     "pct": 20.32520325203252
+    },
+    "positive_nodes": {
+     "median": 3.0,
+     "q1": 1.0,
+     "q3": 7.0
+    },
+    "events": {
+     "n": 94,
+     "pct": 38.21138211382114
+    }
+   },
+   "no_tamoxifen": {
+    "n": 440,
+    "age": {
+     "median": 50.0,
+     "q1": 45.0,
+     "q3": 59.0
+    },
+    "postmenopausal": {
+     "n": 209,
+     "pct": 47.5
+    },
+    "tumor_size_mm": {
+     "median": 25.0,
+     "q1": 20.0,
+     "q3": 35.0
+    },
+    "grade_3": {
+     "n": 111,
+     "pct": 25.227272727272727
+    },
+    "positive_nodes": {
+     "median": 3.0,
+     "q1": 1.0,
+     "q3": 7.0
+    },
+    "events": {
+     "n": 205,
+     "pct": 46.590909090909086
+    }
+   }
+  }
+ },
+ "inputs": [],
+ "versions": {
+  "python": "3.10.13",
+  "matplotlib": "3.10.7",
+  "numpy": "1.26.4"
+ },
+ "created": "2026-10-01T21:21:05-04:00",
+ "theme": "/mnt/data1/bal753/research-skills/skills/results-deck/engine/template/theme"
+}

@@ -1,0 +1,59 @@
+{
+ "figure": "layout_title",
+ "png": "layout_title.png",
+ "module": "plotting.layouts",
+ "stats": {
+  "layout": "title slide",
+  "slide_in": [
+   13.333,
+   7.5
+  ],
+  "boxes_in": {
+   "logo": [
+    0.6,
+    0.3,
+    2.4,
+    0.35
+   ],
+   "accent_bar": [
+    0.6,
+    2.3,
+    0.1,
+    1.86
+   ],
+   "title": [
+    0.95,
+    2.3,
+    11.2,
+    1.3
+   ],
+   "subtitle": [
+    0.95,
+    3.72,
+    11.2,
+    0.45
+   ],
+   "presenter": [
+    6.4,
+    4.75,
+    6.333,
+    1.3
+   ],
+   "accent_rule": [
+    0,
+    6.83,
+    13.333,
+    0.05
+   ]
+  },
+  "geometry": "engine/themes/neutral/theme.json and examples/slides/*/slides/*.js"
+ },
+ "inputs": [],
+ "versions": {
+  "python": "3.10.13",
+  "matplotlib": "3.10.7",
+  "numpy": "1.26.4"
+ },
+ "created": "2026-10-01T21:54:35-04:00",
+ "theme": "/mnt/data1/bal753/research-skills/skills/results-deck/engine/themes/neutral"
+}

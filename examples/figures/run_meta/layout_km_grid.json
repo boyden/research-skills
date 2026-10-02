@@ -1,0 +1,65 @@
+{
+ "figure": "layout_km_grid",
+ "png": "layout_km_grid.png",
+ "module": "plotting.layouts",
+ "stats": {
+  "layout": "KM grid",
+  "slide_in": [
+   13.333,
+   7.5
+  ],
+  "boxes_in": {
+   "title": [
+    0.59,
+    0.36,
+    9.6,
+    0.6
+   ],
+   "logo": [
+    10.983,
+    0.2,
+    2.0,
+    0.35
+   ],
+   "page": [
+    12.363,
+    7.0,
+    0.6,
+    0.3
+   ],
+   "source": [
+    6.4,
+    7.05,
+    5.88,
+    0.33
+   ],
+   "abbreviations": [
+    0.6,
+    7.05,
+    5.5,
+    0.33
+   ],
+   "figure": [
+    0.617,
+    0.95,
+    12.1,
+    4.9
+   ],
+   "conclusion": [
+    0.7,
+    5.87,
+    11.933,
+    1.05
+   ]
+  },
+  "geometry": "engine/themes/neutral/theme.json and examples/slides/*/slides/*.js"
+ },
+ "inputs": [],
+ "versions": {
+  "python": "3.10.13",
+  "matplotlib": "3.10.7",
+  "numpy": "1.26.4"
+ },
+ "created": "2026-10-01T21:54:36-04:00",
+ "theme": "/mnt/data1/bal753/research-skills/skills/results-deck/engine/themes/neutral"
+}
