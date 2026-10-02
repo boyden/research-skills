@@ -1,130 +1,149 @@
 ---
 name: results-deck
-description: 从分析结果做或修改汇报 deck / slides / pptx（结果汇报、组会、答辩、进展汇报）。用户说「做 deck」「出 slides」「把结果做成 pptx」「改某几页」「加一页 KM / 森林图 / 方法页」「同步讲稿」「发布新版本」时使用。产出是 16:9 pptx + PDF：每页一个主题标题、一句结论、按上屏尺寸画好的图、来源行，数字全部可溯源。
+description: Build or revise presentation decks from existing analysis results. Use for results reports, lab meetings, defenses, progress updates, slide edits, figure or methods slides, speaker-note synchronization, and explicit deck releases. Do not use for doing the analysis from scratch, manuscript layout, or text-only reports.
 ---
 
-# results-deck：从分析结果出汇报 deck
+**English** | [简体中文](SKILL.zh-CN.md)
 
-## 什么时候用
+# results-deck: presentation decks from analysis results
 
-- 要把已有分析结果（结果表、图）做成对外汇报的 deck，或改已有 deck 的某几页。
-- 要加页、挪页、改页标题、同步讲者改过的讲稿、发布一个新版本。
-- 不用于：从头做分析（先把结果表做出来）、论文排版、纯文字报告。
+Build a traceable 16:9 presentation deck from existing analysis results. The normal deliverable is a `.pptx`; the engine also attempts to produce a matching PDF and preview PNGs when the required local tools are available.
 
-## 前置条件
+## When to use
 
-开始前先查这些在不在；缺了就写出用户该跑的安装命令，问过再装，不自己装：
+Use this skill when the user wants to:
 
-- node 和 pptxgenjs（`NODE_PATH` 或本地 `node_modules`）；
-- LibreOffice（`soffice`）和 pdftoppm（poppler），用来转 PDF、出预览 PNG；
-- Python 和 matplotlib、pandas；画生存或 ROC 图时还要 lifelines、scikit-learn；
-- 模板用的字体已装进系统（`fc-list | grep <字体名>`，见 [reference/checks.md](reference/checks.md) §4）；
-- 可选：Anthropic pptx skill 自带的 `validate.py`，做结构检查。
+- turn result tables or existing figures into a presentation deck;
+- add, remove, move, or revise slides;
+- add a KM, ROC, forest, methods, framework, table, or summary slide;
+- synchronize speaker notes edited in PowerPoint; or
+- create an explicit released version of a deck.
 
-## 先读共同规则
+Do not use it to perform the underlying statistical analysis, lay out a manuscript, or write a text-only report. Prepare or verify result tables first.
 
-动手前读完这四份，本 skill 不重复它们，只在冲突时以它们为准：
+## Prerequisites and installation boundary
 
-- [../../shared/numbers-and-sources.md](../../shared/numbers-and-sources.md)：每个数字指到来源、找不到就停下来问、p / HR / 区间格式、candidate 与 significant 的措辞。
-- [../../shared/figures.md](../../shared/figures.md)：按最终尺寸画图、英文、方形面板、KM 配色和四个量、框架图箭头、图标许可、`FIGURES` 注册与 `--only`。
-- [../../shared/tables.md](../../shared/tables.md)：三线表，含 pptxgenjs 的逐格边框写法。
-- [../../shared/writing-style.md](../../shared/writing-style.md)：标题写主题、结论句写发现、用户定的说法照原样、缩写格式、人名、wip 与版本号。
+Before building, check which dependencies are available:
 
-本目录的参考文档：
+- Node.js and `pptxgenjs` (through `NODE_PATH` or a local `node_modules`);
+- LibreOffice (`soffice`) and Poppler (`pdftoppm`, and `pdftotext` for layout checks);
+- Python with `matplotlib` and `pandas`; add `lifelines` or `scikit-learn` only when the requested figures need them;
+- the fonts used by the selected theme; and
+- optionally, a PowerPoint structural validator such as `validate.py`.
 
-- [reference/outline-format.md](reference/outline-format.md)：大纲目录和逐页块的格式，`{{key}}` 页引用。
-- [reference/slide-types.md](reference/slide-types.md)：页面几何（坐标、字号）和页型目录。
-- [reference/checks.md](reference/checks.md)：验证流程和踩过的坑。
+If a dependency is missing, report the command the user can run and ask before installing anything. Do not install or upgrade packages, fonts, or other system resources on your own.
 
-## 项目里的目录约定
+## Read the shared rules
 
-deck 放在项目里的一个目录下（如 `presentation/`），结构如下。名字可以按项目改，分工不变。
+Before changing content or figures, read these shared rules. They govern provenance, wording, figure construction, tables, and writing style:
 
+- [numbers-and-sources.md](../../shared/numbers-and-sources.md): number provenance, effect-size formats, intervals, and candidate-versus-significant wording;
+- [figures.md](../../shared/figures.md): final-size drawing, KM / ROC / forest conventions, diagrams, icons, figure registration, and `--only`;
+- [tables.md](../../shared/tables.md): three-line tables and native `pptxgenjs` table borders; and
+- [writing-style.md](../../shared/writing-style.md): titles, conclusion sentences, abbreviations, names, wording supplied by the user, and version naming.
+
+For the executable v2 interface, use [engine/SPEC.md](engine/SPEC.md) as the authority. Use [reference/outline-format.md](reference/outline-format.md), [reference/slide-types.md](reference/slide-types.md), and [reference/checks.md](reference/checks.md) for content planning, layout conventions, and verification.
+
+## Language and documentation policy
+
+- All generated deliverables are English: slide titles and messages, figure labels, tables, source lines, speaker notes, PPTX, PDF, and preview images.
+- Repository documentation is bilingual. Maintain an English `X.md` and a Chinese `X.zh-CN.md` for every user-facing skill, engine, reference, and template document; put a language switcher on the first line of both, or immediately after YAML front matter when a document has it.
+- Keep code identifiers, filenames, figure text, and on-slide text in English. Chinese belongs in the paired documentation files or in explicitly localized tool output, not in the deliverables.
+
+## Project layout
+
+The engine v2 uses one file per slide. A deck normally has this shape:
+
+```text
+presentation/<deck>/
+  deck.config.js             metadata, theme, lang, references, and section order
+  theme/theme.json           colors, fonts, geometry, and assets
+  slides/<key>.js            exactly one page module per slide
+  slides/_lib/               deck-local reusable layout helpers, not pages
+  notes/<key>.md             one speaker-notes file per slide, optional
+  notes/_aliases.json        title aliases used when importing notes from PPTX
+  outline/                   content, provenance, status, and generated page tables
+  plotting/                  figure modules that read results but do not analyze
+  figures/                   PNGs drawn at their on-screen size
+    run_meta/<figure>.json   inputs and statistics for each registered figure
+  output/                    working and released deck artifacts
 ```
-presentation/
-  outline/              大纲：内容的唯一来源（格式见 reference/outline-format.md）
-    README.md           索引、生成的页码对照表、各节页数
-    01_<chapter>.md …   一章一个文件
-    CHANGELOG.md        挪页、改名、删页的历史
-  plotting/             画图代码包：只读结果表，不做分析
-    main.py             入口：--only <图名> …，--out-dir；自动发现各模块的 FIGURES
-    <section>.py        一节一个模块，导出 FIGURES = {"km_example": fig_km, ...}（可选：模块的输入表清单 INPUTS，写进 run_meta）
-  figures/              上屏尺寸的 PNG
-    run_meta/<图名>.json  每张图一份：输入、统计量、脚本、时间
-  js/                   构建脚本（pptxgenjs）
-    style.js            颜色、字体、文献登记表 REF、图片登记表
-    primitives.js       版式元素和页型模板
-    slides_<block>.js   一段连续的页一个文件，每页一个 builder 函数
-    build_deck.js       只定页序：SLIDES = [[section, [builders…]], …]，再写 pptx
-    notes.json          讲稿：{builder key: 全文}
-  output/
-    <deck>_wip.pptx / .pdf / .pages.json      工作版，每次覆盖
-    <deck>_v<N>.pptx / .pdf / .pages.json     发布版，只增不改
-  tools/                页引用、版面、讲稿检查（见 reference/checks.md）
+
+Start a new deck by copying [engine/template/](engine/template/README.md); `lang` (`"en"` or `"zh"`) sets the language of the blocks that `pages.py` generates in the outline.
+
+The project outline is the content and provenance review source. The slide modules are the executable layout source: the engine does not infer slide content from Markdown. Keep each slide's `Message`, numbers, figures, and source line synchronized between the outline and its page module.
+
+## Page-module contract
+
+Every file in `slides/` whose name does not start with `_` must export:
+
+```js
+module.exports = {
+  section: "results",
+  order: 20,
+  build(pres, n, P, ctx) {
+    const s = P.newSlide(pres, "Topic title", n);
+    P.figure(s, "figure_name.png");
+    P.conclusion(s, "One evidence-backed conclusion sentence.");
+    P.source(s, "Source: result table or dataset; method");
+    return s;
+  },
+};
 ```
 
-- **一页一个 builder 函数**，函数名就是这一页的 key：大纲、讲稿、检查工具都用它指页，不用页号。
-- **`SLIDES` 按节分组**（`[["title", [...]], ["results", [...]], ["supplementary", [...]]]`）：页序只在这里定；
-  节 key 用于只构建部分页（`--sections`）和列页数（`--list-sections`）。
-- **每次构建写 `<输出名>.pages.json`**：`[{page, title, section, builder}, …]`，页号 ↔ 标题 ↔ key 的唯一真相。
-- 图一张一个注册名，平时只用 `--only` 画改过的那几张；每张图写自己的 run_meta，并行画图不会互相覆盖。
+Keep these invariants:
 
-## 工作流
+- `deck.config.js.sections` contains only section keys, in deck order.
+- `section` must be one of those keys; `order` controls the order within a section.
+- The slide key is the filename without `.js`; use a stable, unique key matching `^[A-Za-z][A-Za-z0-9_]*$`.
+- Each page module creates exactly one slide through `P.newSlide()`.
+- Put shared layouts in `slides/_lib/`; do not turn helper files into pages.
+- Read colors, fonts, sizes, and geometry from `P.T` and `P.G`, or use primitives that already do so. Do not hard-code theme colors, font names, or page geometry in a page module.
+- Use `P.figure()` for result figures so the image is placed at native on-screen size and sent behind the title. Use fitting or scaling only for thumbnails and other explicitly non-result images.
 
-1. **大纲**：先在 `outline/` 对应章节写或改这一页的块：主题标题、`Message`（上屏英文原句）、图、数字及来源、Source 行、状态。
-   用户没确认的说法不进 Message。数字从结果表或 run_meta 取，旧版 deck 只提供结构。
-2. **画图**：先定版位（整宽 12.1 × 4.6 in，两张并排各 5.9 × 4.6 in），按版位尺寸画，字号就是上屏字号。
-   新图在对应模块里写 `fig_xxx()` 返回 `(fig, stats)`，注册进 `FIGURES`，`--only xxx` 画出并写 run_meta。
-3. **构建**：在对应的 `slides_<block>.js` 里加 builder，把它放进 `SLIDES`；改动期间只构建自己那几节到临时路径。
-4. **渲染并检查**：pptx → PDF → PNG，逐页看改过的页（清单见 [reference/checks.md](reference/checks.md)）。
-5. **wip 与发布**：平时整套构建写 `_wip`（覆盖）；到节点或用户确认时 `--release` 写 `_v<N>`，N = 现有最大 + 1，旧版全部保留。
-   pptx、PDF、pages.json 一起出。
-6. **讲稿同步**：讲者在 PowerPoint 里改讲稿后，从他的 pptx 读回 `notes.json`（按页标题配 key），再构建；
-   挪页后查讲稿里的相对引用（「next slide」）。
-7. **刷新引用**：增删页、挪页、改标题后重新生成大纲里的页码表，检查 `{{key}}` 全部能解析。
+## Workflow
 
-## 每页的规则（摘要）
+1. **Inspect inputs and scope.** Identify the result tables, source figures, existing deck, requested audience, and changed sections. Do not invent missing numbers or silently reinterpret an analysis.
+2. **Update the outline.** Record the topic title, exact on-screen `Message`, figure key, every displayed number and its source, source line, status, and speaker-note cautions. Unconfirmed wording or numbers stay marked as draft.
+3. **Prepare figures.** Plot only from result tables or other named inputs. Register each figure, return its display statistics, write `run_meta`, and use `engine/tools/plot.py <deck> --only <figure>`. Draw at the final on-screen size.
+4. **Build the changed pages.** Use `node engine/js/build.js <deck> --only <key,...> --out <scratch>/x.pptx --png` or `--sections <section,...> --out <scratch>/x.pptx --png` for a partial build; its footers carry the page numbers of the full deck. A full build (`node engine/js/build.js <deck>`, which replaces the `_wip` artifacts) is for integration and release checks and is run by the integrator.
+5. **Render and inspect.** Convert to PDF and PNG, or use the engine's `--png` option. Inspect every changed slide for overflow, overlap, missing footer or DRAFT state, incorrect figure sizing, non-English labels, and mismatched numbers. Use `engine/tools/layout_check.py` as a screening aid; the rendered PNG is the final visual judge.
+6. **Synchronize speaker notes.** After the speaker edits a PPTX, run `engine/tools/pull_notes.py` in dry-run mode first, resolve unmatched or repeated-title slides with `notes/_aliases.json`, then run `--write`, which writes `notes/<key>.md` only for matched slides whose notes changed. Recheck relative wording such as “next slide” after moving pages.
+7. **Move pages and refresh page references.** Move a page with `engine/tools/move.py <deck> <key> --after <key>` (or `--before <key>`, `--to <section>`); it edits only that page file's `section` and `order`. After adding, deleting, moving, or renaming pages, run a full build, then `engine/tools/pages.py <deck> --table --write` and `--check`. Use `{{key}}`, `{{key.title}}`, and `{{key.page}}` in live outline prose instead of handwritten page numbers.
+8. **Release only with confirmation.** Normal work overwrites the `_wip` artifacts. Use `--release` only for an explicit release request or milestone confirmation; never modify an existing `_v<N>` artifact.
 
-| 元素 | 规则 | 为什么 |
-|---|---|---|
-| 标题 | 写主题，如 `Hormone Therapy — Recurrence-free Survival`，28 pt；一节内同一前缀 | 结论放标题会和结论句重复，且标题要稳定作为引用目标 |
-| 结论句 | 每页一句，就是大纲的 `Message`，18 pt 黑色粗体；太长拆成 bullet，不缩字号 | 听众只记一句话；字号统一，页与页之间不跳 |
-| Source 行 | 右下角 9 pt 衬线：结果表 / 数据集 + 方法 | 每个数字都能指回去 |
-| DRAFT 标签 | 大纲标 ⚠️ 的页照样出，右上角灰色 `DRAFT – to be confirmed`，待确认的说明抄进讲稿 | 页面先占位，不让未确认的数字被当成定论 |
-| 图 | 1:1 放置，不缩放、不裁剪、不拉伸；主图放到 z 序最底 | 字号各页一致；标题折行时不被图盖住 |
-| 原生表格 | 一律走一个 `table()` helper（三线表），不直接 `addTable` | 表格样式只在一处定义 |
-| 文献 | 上屏引用从一个登记表（`REF`）取，先登记再用；格式 `Surname, Given, et al. Journal vol.issue (year): pages` | 作者、卷期只核对一次 |
-| 缩写 | 每页一行 `ABBR: expansion; ABBR: expansion.` | 见 writing-style.md |
-| 讲稿 | 为版面从页上挪走的细节写成 `Note: …`；「可能被过度解读」写在讲稿，不上屏 | 讲者能核对哪些话页上没有 |
+When several agents edit one deck in parallel, each one writes only its own page files, notes, and figure module and checks its pages with partial builds. The full build, `--release`, `move.py --respace`, `pages.py --table --write`, `pull_notes.py --write`, and commits are integrator steps, run serially; see [reference/checks.md](reference/checks.md#8-wip-release-and-parallel-slide-editing).
 
-## 什么时候停下来问
+## Per-slide rules
 
-- 上屏的数字在结果表、run_meta 或大纲写明的来源里**找不到或对不上**：停下来问，不自己挑一个。
-- **图是错的**（数字、标签、配色、尺寸不对）：回 `plotting/` 改画图代码，`--only` 重画；不在 deck 里遮、裁、拉伸或叠文字修补。
-- 用户的说法和来源矛盾（如时间范围写错）：照来源，直接告诉用户差在哪里。
-- 改动要碰共享文件（`primitives.js`、`style.js`、`build_deck.js`）的已有函数签名或行为：先说明，等确认。
-  新的版式元素先放在自己的 `slides_<block>.js` 里。
+| Element | Rule |
+|---|---|
+| Title | State the topic, not the conclusion; use a stable title and consistent section prefix. |
+| Conclusion | Use one evidence-backed conclusion sentence, normally the outline's exact `Message`; split into bullets when necessary instead of shrinking the font. |
+| Source line | Put the result table, dataset, and method in the source line so every displayed number has a traceable origin. |
+| Draft state | A slide with unresolved content remains buildable but carries `DRAFT – to be confirmed`; put the unresolved issue in its notes. |
+| Figures | Draw at final size; do not crop, stretch, or cover a wrong figure in the deck. Fix the plotting code and redraw it. |
+| Tables | Use the shared three-line `table()` helper rather than direct `addTable()` calls. |
+| References | Register on-screen citations once and use the shared reference helper. |
+| Abbreviations | Keep one consistent abbreviation line per slide when abbreviations appear. |
+| Notes | Put layout-displaced details and likely over-interpretations in speaker notes, clearly labeled when useful. |
 
-## 不做
+## Stop and ask
 
-- 不上传（Google Drive、云盘等）；用户自己拖进去。
-- 不 commit，除非用户要求。
-- 不安装、升级包（包括 npm、字体）；缺什么就写出用户该跑的命令，然后停下。
-- 不改分析结果文件；不改已发布的 `_v<N>` 文件。
-- 不重写已有的页来加新页；在对应的 builder 文件里追加。
+Stop and ask the user when:
 
-## 构建引擎（规划中）
+- a displayed number cannot be found or does not match the result table, figure metadata, or named source;
+- the user's wording conflicts with the source or changes an estimand, time range, comparison, or statistical interpretation;
+- a figure is wrong in its values, labels, colors, or intended size;
+- a requested edit would change the signature or behavior of a shared engine file such as `primitives.js` or `build.js`; or
+- a missing dependency or missing input prevents a reliable build.
 
-可复用的引擎（pptxgenjs 版式元素、`build_deck.js`、页引用 / 版面 / 讲稿检查工具）计划放在
-`skills/results-deck/engine/`（第二阶段）。在那之前，把 [examples/slides/](../../examples/slides/)
-（`common.js` + `build_results.js` / `build_narrative.js` + `render.sh`）拷进项目当起步骨架，按
-[reference/slide-types.md](reference/slide-types.md) 的几何和页型改成项目的 `primitives.js` 和 builder，
-检查按 [reference/checks.md](reference/checks.md) 手动或用项目自带脚本做。
+Do not choose among conflicting numbers, patch a wrong figure by overlaying objects, or present an unconfirmed result as final.
 
-这套骨架还没有、要等 engine 或在项目里自己补的：
+## Do not
 
-- `SLIDES` 分节和 `--sections` / `--list-sections`；
-- `--release` 发布 `_v<N>`；
-- 写 `pages.json`；
-- `{{key}}` 页引用的解析和检查工具；
-- `notes.json` 与讲者 pptx 的讲稿同步（示例 builder 里的讲稿直接写在 `addNotes()` 里）。
+- Do not perform the underlying analysis or edit analysis-result files as part of deck layout.
+- Do not install or upgrade packages, fonts, or system tools without user approval.
+- Do not overwrite released `_v<N>` artifacts.
+- Do not upload the deck to cloud storage or commit changes unless the user explicitly asks.
+- Do not use page numbers as stable identifiers; use slide keys and generated `pages.json`.

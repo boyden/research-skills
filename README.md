@@ -1,40 +1,47 @@
+**English** | [简体中文](README.zh-CN.md)
+
 # research-skills
 
-科研产出用的 Claude Code skill 集合：从分析结果出汇报 deck，以后加写论文等。
+A collection of Claude Code skills for research outputs: turning analysis results into a presentation deck, with paper writing and more to come.
 
-## 结构
+## Structure
 
 ```
-shared/                      跨 skill 的共同规则，各 skill 引用、不重复抄
-  numbers-and-sources.md     数字溯源、效应量写法、多重检验措辞
-  figures.md                 按最终尺寸画图、字体、配色、KM / ROC / 森林图、示意图、开放许可图标
-  tables.md                  三线表（matplotlib / pptxgenjs / LaTeX / Word 的实现）
-  writing-style.md           标题与结论句、照原样用用户的说法、人名、缩写、版本命名
+shared/                      Rules shared across skills; each skill references them instead of copying
+  numbers-and-sources.md     Number provenance, how to write effect sizes, wording for multiple testing
+  figures.md                 Drawing at final size, fonts, colors, KM / ROC / forest plots, diagrams, open-license icons
+  tables.md                  Three-line tables (implementations in matplotlib / pptxgenjs / LaTeX / Word)
+  writing-style.md           Titles and conclusion sentences, using the user's wording as given, person names, abbreviations, version naming
 skills/
-  results-deck/              从分析结果出 pptx deck
-    SKILL.md                 入口：工作流、每页规则、什么时候停下来问
-    reference/               大纲格式、页型目录、检查清单
-examples/                    公开数据（GBSG2）画的示例图、开放许可图标（CC0 / ISC / MIT / CC BY，逐个登记在 examples/icons/manifest.csv），以及生成示例图的脚本
+  results-deck/              Build a pptx deck from analysis results
+    SKILL.md                 Entry point: workflow, per-slide rules, when to stop and ask
+    reference/               Outline format, slide-type catalog, checklist
+    engine/                  Reusable v2 builder, themes, plotting and verification tools
+      SPEC.md                Engine interface contract
+      template/              Copyable deck skeleton
+examples/                    Example figures drawn from public data (GBSG2), open-license icons (CC0 / ISC / MIT / CC BY, each registered in examples/icons/manifest.csv), and the script that generates the example figures
 ```
 
-计划中：
-- `skills/results-deck/engine/`：可复用的 pptxgenjs 版式元素、构建脚本和检查工具，外加一个能直接 build 的小骨架；
-- `skills/paper-writing/`：写论文的 skill；
-- `.claude-plugin/`：插件 manifest，用来在别的机器上一次装好。
+Planned:
+- `skills/paper-writing/`: a skill for writing papers;
+- `.claude-plugin/`: a plugin manifest, for installing everything in one step on another machine.
 
-## 在 Claude Code 里使用
+## Using it in Claude Code
 
-插件 manifest 还没写，暂时用软链接把 skill 放进用户级 skill 目录，所有项目都能用：
+The plugin manifest is not written yet. For now, symlink the skill into the user-level skill directory so every project can use it:
 
 ```bash
 ln -s /path/to/research-skills/skills/results-deck ~/.claude/skills/results-deck
 ```
 
-SKILL.md 用相对路径 `../../shared/` 引用共同规则。软链接只解析到真实目录，所以链接整个 skill 目录就行，
-不要只拷 SKILL.md 一个文件出去。
+SKILL.md references the shared rules by the relative path `../../shared/`. A symlink resolves only to the real directory, so link the whole skill directory;
+do not copy SKILL.md out on its own.
 
-## 约定
+## Conventions
 
-- 文档用中文；图、上屏文字和代码注释用英文。
-- 这里只放通用的东西。单位的模板 pptx、logo、受许可限制的字体，以及项目专用的统计口径，都留在各项目里。
-- 外部图标和图片只用开放许可的，并在 `examples/README.md` 或使用它的项目里登记来源和许可。
+- Docs come in two versions: English `X.md` (the GitHub default) and Chinese `X.zh-CN.md`. When you change one, update the other in the same change.
+- All generated deliverables are English: slide and figure text, tables, source lines, speaker notes, PPTX, PDF, and preview images.
+- Figures, on-slide text, speaker notes, code identifiers, filenames, and code comments are in English.
+- User-facing engine, template, reference, and skill documents follow the same `X.md` / `X.zh-CN.md` pairing rule.
+- Only generic material goes here. Institutional template pptx files, logos, license-restricted fonts and project-specific statistical definitions stay in their own projects.
+- Use only openly licensed external icons and images, and register their source and license in `examples/README.md` or in the project that uses them.

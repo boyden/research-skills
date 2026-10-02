@@ -1,40 +1,44 @@
-# 写作约定
+**English** | [简体中文](writing-style.zh-CN.md)
 
-适用于上屏文字、论文正文，以及代码注释、文档和 commit message。
+# Writing conventions
 
-## 说法
+Applies to text on slides, paper text, and code comments, docs and commit messages.
 
-- **标题写主题，结论句写发现。**
-  - 标题例子：`Hormone Therapy — Recurrence-free Survival`，不是一句结论。
-  - 结论句例子：`Tamoxifen is associated with longer recurrence-free survival (HR 0.69 …)`。
-- **用户定了怎么说，就照原样用。** 不自己往上屏文字里加限定语、分组细节或解释；口径、时间范围、细节放 notes 或大纲。
-  只有当简单说法和出处矛盾时（比如把 20 年累计数写成「10 年内」）才不照改，并直接告诉用户差在哪里。
-- **因果和关联分开写**：观察性数据写 *associated with*，不写 *improves*、*causes*。
-- **平行的东西用平行的名字。** 平行的特征族、分析、模块，命名时不用 `extra_*`、`base`、「第二批」这类暗示先后主次的词。
-- **缩写**：每页（或每张图注）统一写成 `ABBR: expansion; ABBR: expansion.`。
-  - 按给定顺序列，分号分隔，句号结尾，不加 "Abbreviations:" 前缀。
-  - 展开时把缩写的每个字母都展开。
-  - 正负号写成后缀：`HR+: hormone receptor-positive`。
-  - 需要补充的放在括号里。
+## Wording
 
-## 人名
+- **Titles state the topic; conclusion sentences state the finding.**
+  - Title example: `Hormone Therapy — Recurrence-free Survival`, not a conclusion.
+  - Conclusion sentence example: `Tamoxifen is associated with longer recurrence-free survival (HR 0.69 …)`.
+- **When the user has decided how to say something, use it as is.** Do not add qualifiers, subgroup details or explanations to on-slide text yourself; definitions, time ranges and details go in the notes or the outline.
+  Only when the simple wording contradicts the source (e.g. a 20-year cumulative count written as "within 10 years") do you not adopt it as is, and you tell the user directly where the difference lies.
+- **Keep causation and association apart**: for observational data write *associated with*, not *improves* or *causes*.
+- **Parallel things get parallel names.** When naming parallel feature families, analyses or modules, do not use words that imply order or rank, such as `extra_*`, `base` or "second batch".
+- **Abbreviations**: on each slide (or in each figure legend), write them uniformly as `ABBR: expansion; ABBR: expansion.`.
+  - List them in the given order, separated by semicolons, ending with a period, with no "Abbreviations:" prefix.
+  - When expanding, expand every letter of the abbreviation.
+  - Write plus/minus signs as suffixes: `HR+: hormone receptor-positive`.
+  - Anything extra goes in parentheses.
 
-- 代码注释、文档、commit message 里不写人名，也不把判断或决定归到某个人名下。
-  核对过的事实写「已确认（日期，核对方式）」。
-- 例外：
-  - 文献引用的作者，照单位模板的格式写，如 `Surname, Given, et al. Journal vol.issue (year): pages`；
-  - 标题页的讲者；
-  - 论文的作者署名；
-  - 许可证要求的署名（如 CC BY 图标、图片的作者）。
-- 目录名或文件名里本来就带的人名是路径，原样保留。
+## Person names
 
-## 版本与文件
+- No person names in code comments, docs or commit messages, and do not attribute judgments or decisions to a named person.
+  Verified facts are written as "Confirmed (date, how it was checked)" (in Chinese docs: 「已确认（日期，核对方式）」).
+- Exceptions:
+  - authors in literature citations, in the format of the institution's template, e.g. `Surname, Given, et al. Journal vol.issue (year): pages`;
+  - the speaker on the title slide;
+  - the author byline of a paper;
+  - attribution required by a license (e.g. CC BY icons, authors of images).
+- Person names that are already part of a directory or file name are paths; keep them unchanged.
 
-- 产出要么带版本号，要么带日期，不要两个都带。deck 用版本号（`_v1`、`_v2` …）。
-- 工作版（`*_wip`）每次覆盖；到了节点或用户确认时才发布新版本号。已发布的版本全部保留，不删除、不覆盖。
-- 给用户汇报生成的文件（图、PDF、CSV、日志）时写完整绝对路径，一行一个，放在代码块里；仓库里的源文件用相对链接。
+## Versions and files
 
-## 语言
+- An output carries either a version number or a date, not both. Decks use version numbers (`_v1`, `_v2` …).
+- The working version (`*_wip`) is overwritten every time; a new version number is released only at a milestone or when the user confirms. All released versions are kept: never deleted, never overwritten.
+- When reporting generated files (figures, PDFs, CSVs, logs) to the user, give full absolute paths, one per line, in a code block; source files in the repository get relative links.
 
-- 图和上屏文字用英文；论文按投稿语言。
-- 文档、注释用什么语言按项目约定；同一个项目里保持一致。
+## Language
+
+- All generated deliverables are in English: slide and figure text, tables, source lines, speaker notes, PPTX, PDF, and preview images. Papers remain in the language of submission.
+- Repository documentation is maintained in two versions: English `X.md` (the GitHub default) and Chinese `X.zh-CN.md`. Both start with a language switcher line, or place it immediately after YAML front matter, and changes to one are made to the other in the same change.
+- Code identifiers, filenames, comments, slide text, and figure text stay in English unless a tool is explicitly producing localized documentation output.
+  English docs use American spelling (color, gray, license, center); code identifiers, file names and labels already drawn in figures keep their spelling until the code or figure changes.

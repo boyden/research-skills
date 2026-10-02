@@ -1,135 +1,171 @@
-# 页面几何与页型
+**English** | [简体中文](slide-types.zh-CN.md)
 
-16:9，13.333 × 7.5 in（pptxgenjs `LAYOUT_WIDE`）。坐标单位都是英寸，原点在左上角。
-下面的数字是默认值（[examples/slides/common.js](../../../examples/slides/common.js)），换模板时按模板量出来替换，但各区的上下次序和留白关系不变。
+# Slide geometry and slide types
 
-![slide 版面分区](../../../examples/figures/slide_anatomy.png)
+16:9, 13.333 × 7.5 in (pptxgenjs `LAYOUT_WIDE`). All coordinates are in inches, with the origin at the top left.
+The numbers in §1 are the defaults of the neutral theme, [themes/neutral/theme.json](../engine/themes/neutral/theme.json) (the field named in each row); page files read them through `P.T` / `P.G` and never write them out. The per-type numbers in §2 come from the example page files ([results](../../../examples/slides/results/slides/), [narrative](../../../examples/slides/narrative/slides/)).
+With a different template, generate the theme with `theme_from_pptx.py` or measure the template and replace the values in its theme.json, but keep the top-to-bottom order of the regions and their spacing relationships.
+The layout diagram of each slide type sits under that slide type in §2 (`examples/figures/layout_*.png`, drawn to scale).
 
-## 1. 几何
+## 1. Geometry
 
-| 元素 | x | y | w × h | 字体与样式 |
+| Element | x | y | w × h | Font and style |
 |---|---|---|---|---|
-| 页边距 / 内容宽 | 0.6 / — | — | 内容宽 12.133 | — |
-| 标题 | 0.59 | 0.36 | 9.6 × 0.6 | 28 pt 粗体，灰（如 `595959`），标题字体；左上，止于 logo 左边 |
-| logo | 10.98 | 0.2 | 2.0 × 0.35 | 右上，通用占位框；换成单位标识时按模板量出的框替换，没有标识就留空，不挪别的元素 |
-| DRAFT 标签 | 10.683（= 13.333 − 2.65） | 0.66 | 2.35 × 0.32 | 浅灰底、细灰边，12 pt 粗体中灰，居中：`DRAFT – to be confirmed` |
-| 主图（整宽） | 居中（≈ 0.617） | 1.1 | 12.1 × 4.6，止于 5.7 | 原尺寸放置：w = 像素宽 / dpi，h = 像素高 / dpi |
-| 结论框 | 0.7 | 5.75（图下）/ 5.95（无图） | 11.933 × 1.05，有图时止于 6.80 | 18 pt 粗体黑色，顶对齐；放得下 3 行 |
-| 结论列表 | 同上 | 同上 | 同上 | 每条悬挂缩进 22 pt（0.3 in），段后 10 pt |
-| 来源行 / 文献 | 0.6 | ≥ 6.82 | 11.683 × 0.6 | 9 pt 衬线、近黑，右对齐、底对齐（文字落在约 7.1–7.4）；期刊名斜体 |
-| 页码 | 12.363 | 7.0 | 0.6 × 0.3 | 12 pt 灰，右对齐，紧挨来源行右边 |
-| 缩写行 | 按页放 | — | — | 9.5 pt 中灰，`ABBR: ` 粗体 |
+| Margin / content width (`geometry.margin`; `G.contentW`) | 0.6 / — | — | content width 12.133 | — |
+| Title (`geometry.title`) | 0.59 | 0.36 | 9.6 × 0.6 | 28 pt bold, gray (e.g. `595959`), title font; top left, ends left of the logo |
+| logo (`geometry.logo`) | 10.98 | 0.2 | 2.0 × 0.35 | Top right, a generic placeholder box; when replaced with an institutional logo, use the box measured from the template; with no logo, leave it empty and don't move other elements |
+| DRAFT label (`geometry.draft`) | 10.683 (= 13.333 − 2.65) | 0.66 | 2.35 × 0.32 | Light gray fill, thin gray border, 12 pt bold mid-gray, centered: `DRAFT – to be confirmed` |
+| Main figure, full width (`geometry.figureTop`, `full`) | Centered (≈ 0.617) | 1.1 | 12.1 × 4.6, ends at 5.7 | Placed at native size: w = pixel width / dpi, h = pixel height / dpi |
+| Conclusion box (`geometry.conclusion`) | 0.7 | 5.75 (below a figure) / 5.95 (no figure) | 11.933 × 1.05, ends at 6.80 with a figure | 18 pt bold black, top-aligned; fits 3 lines |
+| Conclusion list (`conclusion.indent`, `after`) | Same as above | Same as above | Same as above | Hanging indent 22 pt (0.3 in) per item, 10 pt space after |
+| Source line / references (`geometry.source`) | 0.6 | ≥ 6.82 | 11.683 × 0.6 | 9 pt serif, near-black, right-aligned, bottom-aligned (text lands at about 7.1–7.4); journal names in italics |
+| Page number (`geometry.page`) | 12.363 | 7.0 | 0.6 × 0.3 | 12 pt gray, right-aligned, right next to the source line |
+| Abbreviation line (`geometry.abbr`) | 0.6 | 6.85 | 6.0 × 0.55 | 9.5 pt mid-gray, `ABBR: ` in bold; bottom left, bottom-aligned on the row of the source line; options of `P.abbr()` move it |
 
-- **正文 bullet**：单倍行距、段前 0、段后 8 pt；字号 ≥ 18 pt 时段后 10 pt。默认悬挂缩进 16 pt。
-  行距和段前从不单独设，全稿一致。
-- **没有主图的页**（文字页、总结页）结论框默认放在 y = 5.95；有图的页放在 5.75，紧贴图下边。
-- **结论句太长**就拆成 bullet 列表，不缩字号（理由：结论字号各页一致）。
-- **颜色**：标题和正文灰、表格与卡片正文近黑（`222222`）、次要文字中灰（`7F7F7F`）、细线浅灰（`D9D9D9`）、
-  卡片底浅灰（`F3F3F3`）、白底，外加**一个**强调色（取模板或单位标识的主色；示例里的 `A51C30` 只是占位，换成模板主色）。
-  这个强调色的浅色调（如 common.js 的 `accent2`–`accent4`）算同一个颜色。强调色只给步骤卡片头、分组标签、
-  要强调的数字，不用来区分类别。
-- **字体**：标题用模板的 display 字体，正文用模板的无衬线字体，来源行和文献用衬线字体。都写成常量，各 builder 不自己设。
-- **图的 dpi** 在画图和构建两边用同一个常量（如 200）：构建按「像素 / dpi」算放置尺寸，两边不一致图就被缩放了。
-- **z 序**：主图加完后放到本页最底（「置于底层」），同页多张图保持彼此顺序。标题在别的字体下折成两行时就不会被图盖住。
-  卡片上的图标、步骤小图、logo 这类本来就该在形状上面的图不动。
+- **Body bullets** (`geometry.bullet`): single line spacing, 0 space before, 8 pt space after; 10 pt space after when the font size is ≥ 18 pt. Default hanging indent 16 pt.
+  Line spacing and space before are never set individually; they are the same across the whole deck.
+- **Slides without a main figure** (text slides, summary slides) put the conclusion box at y = 5.95 (`G.conclusion.yText`); slides with a figure put it at 5.75 (`yFigure`, the default of `P.conclusion()`), right below the figure.
+- **If the conclusion sentence is too long**, split it into a bullet list; don't shrink the font (reason: the conclusion font size is the same on every slide).
+- **Colors** (`color` in theme.json, `P.T.color` / `P.C`): gray for titles and body text, near-black (`222222`) for table and card text, mid-gray (`7F7F7F`) for secondary text, light gray (`D9D9D9`) for thin lines,
+  light gray (`F3F3F3`) for card fills, a white background, plus **one** accent color (the main color of the template or institutional logo; `A51C30` in the neutral theme is only a placeholder, replace it with the template's main color).
+  Lighter tints of this accent color (`color.accentTints`, `C.accent2`–`C.accent4`) count as the same color. The accent color is only for step-card headers, group labels
+  and numbers to emphasize, never to distinguish categories.
+- **Fonts** (`font.display`, `font.body`, `font.serif`): titles use the template's display font, body text the template's sans-serif font, source lines and references a serif font. They are theme fields; page files don't set them themselves (build.js warns about font names and color literals in page files).
+- **Figure dpi** is the theme's `dpi` (200), read on both the plotting side (`plotting/style.py`) and the build side (`P.figure()`): the build computes the placed size as "pixels / dpi", and if the two sides differ, the figure gets scaled.
+- **z-order**: after the main figure is added, `P.figure()` sends it to the bottom of the slide ("send to back"); several figures on one slide keep their order relative to each other. Then a title that wraps to two lines in another font is not hidden by the figure.
+  Icons on cards, small step images, the logo and other images that are meant to sit on top of shapes are left alone.
 
-## 2. 页型
+## 2. Slide types
 
-每个页型在 `primitives.js` 里是一个模板函数，builder 只填内容。新页型先放在自己的 `slides_<block>.js` 里，用过两次再并进共享文件。
+primitives.js provides the elements the slide types are built from (`newSlide`, `figure`, `conclusion`, `table`, `titleFrame`, `stepArrow` …); each page file `slides/<key>.js` places them and fills in the content. A layout shared by several pages goes into the deck's `slides/_lib/` as a function that each page file calls, and is merged into primitives.js by the integrator after it has been used twice.
 
-### 标题页 / 结束页
+### Title slide / closing slide
 
-- **用于**：第一页（题目、讲者、日期）；结束页（`Thank you`）用同一个框架。
-- **版式**：logo 在左上；题目居中，放在一条横向区带里，左侧一根竖的强调色细条（约 0.1 × 1.86 in），
-  页底一条整宽强调色细线（约 y 6.83，高 0.05）；讲者和日期在题目下方右对齐。
-- **规则**：讲者姓名只出现在这里（和文献引用的作者）。题目可以两行，用软换行，不用两个段落。这两页不进页码系统，标题记作 `Title`、`Thank you`。
+- **Use for**: the first slide (title, speaker, date); the closing slide (`Thank you`) uses the same frame.
+- **Layout**: logo at the top left; the title centered in a horizontal band, with a thin vertical accent-color bar on its left (about 0.1 × 1.86 in),
+  and a thin full-width accent-color line at the bottom of the slide (about y 6.83, height 0.05); speaker and date right-aligned below the title (`geometry.titleSlide`, drawn by `P.titleFrame()`).
+- **Rules**: the speaker's name appears only here (and as authors in references). The title may take two lines, using a soft line break, not two paragraphs. These two slides are built with `P.newSlide(pres, "Title", n, {chrome: false})`: no topic title and no page number on the slide, but they still count in the page numbers of `pages.json`; their titles are recorded as `Title` and `Thank You`.
 
-### 图 + 结论（最常用）
+![title slide layout](../../../examples/figures/layout_title.png)
 
-- **用于**：一张整宽结果图（森林图、KM、热图、柱图）。
-- **版式**：标题 → 主图（y 1.1，原尺寸，居中）→ 结论框（y 5.75）→ 来源行 → 页码；⚠️ 页加 DRAFT 标签。
-- **规则**：图按 12.1 × 4.6 in 画（见 [figures.md](../../../shared/figures.md)）。标题折行压到图时，用参数把图和结论框整体下移，
-  不缩图。图里已经写了的数字，结论句只挑一两个讲。
+### Figure + conclusion (most common)
 
-### 两张图并排
+- **Use for**: one full-width result figure (forest plot, KM, heatmap, bar chart).
+- **Layout**: title → main figure (y 1.1, native size, centered) → conclusion box (y 5.75) → source line → page number; ⚠️ slides get the DRAFT label.
+- **Rules**: draw the figure at 12.1 × 4.6 in (see [figures.md](../../../shared/figures.md)). If a wrapped title runs into the figure, move the figure and conclusion box down together with the `y` argument of `P.figure()` and `P.conclusion()`;
+  don't shrink the figure. Of the numbers already written in the figure, the conclusion sentence picks only one or two.
 
-- **用于**：同一问题的两个视角（两个终点、两种模型），左右对照。
-- **版式**：两张图各按 5.9 × 4.6 in 画，间隔 0.2 in，作为一组水平居中，都放原尺寸。
-- **规则**：两张图的高度、字号、坐标轴范围（能对齐的话）一致；不要把一张整宽图缩成半宽放。
+![figure + conclusion layout](../../../examples/figures/layout_figure_conclusion.png)
 
-### KM 网格（两行终点）
+### Two figures side by side
 
-- **用于**：同一批变量对两个终点（如上行 PFS、下行 OS），每列一个变量。
-- **版式**：图从 y 0.95 起，高 4.9 in（比整宽图多 0.3 in），结论框下移到 y 5.87。
-- **规则**：所有面板是同样大小的正方形，两行共用一条 x 轴范围；每格写 HR [95% CI]、Cox p、C-index、log-rank p
-  （见 [figures.md](../../../shared/figures.md) §4）。标题必须一行放得下，否则会压进图里。
+- **Use for**: two views of the same question (two endpoints, two models), compared left and right.
+- **Layout**: each figure drawn at 5.9 × 4.6 in (`geometry.half`), 0.2 in apart (`geometry.gap`), centered horizontally as a group, both at native size.
+- **Rules**: both figures have the same height, font size and axis ranges (where they can be aligned); don't shrink a full-width figure to half width.
 
-### 方法流程
+![two figures side by side layout](../../../examples/figures/layout_two_figures.png)
 
-- **用于**：方法、处理流程、模型训练步骤。
-- **版式**：一行步骤卡片，卡片之间间隔 0.32 in，中间一个小的右向箭头（高 0.24 in）。
-  每张卡片：强调色的头（高 0.42 in，白色 14 pt 粗体 `1 · Step name`）+ 浅灰底的正文（13 pt 近黑，段后 6 pt）。
-  卡片行 y 1.3、高 2.3；下面是定义和注意事项的 bullet（y 3.85，14 pt）；底部结论框。
-- **每步配一张图（可选）**：画一张和卡片行等宽的图，每格一个小图（同一个样本贯穿各步最好），
-  原尺寸放在卡片头和正文之间；卡片行改为 y 1.05、高 3.95，正文 12 pt、段后 3 pt，bullet 下移到 y 5.05。
-- **规则**：步骤 3–5 个；每步的正文写「做了什么 + 关键参数」，不写结果；结果留给后面的结果页。
+### KM grid (two rows of endpoints)
 
-### 特征定义表
+- **Use for**: the same set of variables against two endpoints (e.g. PFS in the top row, OS in the bottom row), one variable per column.
+- **Layout**: the figure starts at y 0.95 and is 4.9 in tall (0.3 in more than a full-width figure); the conclusion box moves down to y 5.87.
+- **Rules**: all panels are squares of the same size, and both rows share one x-axis range; each cell shows HR [95% CI], Cox p, C-index and log-rank p
+  (see [figures.md](../../../shared/figures.md) §4). The title must fit on one line, otherwise it runs into the figure.
 
-- **用于**：一组特征第一次出现时，告诉听众每个特征怎么算、高低意味着什么。
-- **版式**：一张三线表，从 y 1.05 起，列为
+![KM grid layout](../../../examples/figures/layout_km_grid.png)
+
+### Methods flow
+
+- **Use for**: methods, processing pipelines, model training steps.
+- **Layout**: one row of step cards, 0.32 in apart, with a small right-pointing arrow (0.24 in tall, `P.stepArrow()`) between them.
+  Each card: an accent-color header (0.42 in tall, white 14 pt bold `1 · Step name`) + a light-gray body (13 pt near-black, 6 pt space after).
+  Card row at y 1.3, height 2.3; below it, bullets with definitions and caveats (y 3.85, 14 pt); conclusion box at the bottom.
+- **One image per step (optional)**: draw one figure as wide as the card row, one small image per cell (ideally the same sample through all steps),
+  placed at native size between the card headers and bodies; the card row becomes y 1.05, height 3.95, body 12 pt with 3 pt space after, and the bullets move down to y 5.05.
+- **Rules**: 3–5 steps; each step's body says "what was done + key parameters", not results; results are left for the result slides that follow.
+
+![methods flow layout](../../../examples/figures/layout_methods_flow.png)
+
+### Feature definition table
+
+- **Use for**: the first time a group of features appears, to tell the audience how each feature is computed and what high and low values mean.
+- **Layout**: a three-line table starting at y 1.05, with columns
 
   | Feature | Low → high | What is computed (unit) | Higher value | Lower value | HR > 1: shorter survival with |
   |---|---|---|---|---|---|
 
-  第二列放每个特征一张小示意图（左边低值、右边高值），由画图脚本统一画成同样大小，作为独立图片盖在该格上，
-  格子放不下才按比例缩小（这类小示意图算缩略图；结果图从不缩放）。最后一列的表头按终点改写。
-- **分组行**：表里插一个空行，再在上面盖一个横跨整行的文本框，强调色粗体写组名（不挤在第一列里折行）。
-- **行高**：按每格文字的贪心折行估算（字符宽度按较宽的替代字体取，粗体再宽约 18%），再和图标高度取大，
-  所以两种渲染器里每张图标都落在自己那一行。表框高度 = 各行行高之和。
-- **规则**：表下可以有一行 12 pt 中灰的说明；结论句写「这组特征回答什么问题」，不写结果。
+  The second column holds a small schematic per feature (low value on the left, high value on the right), all drawn at the same size by the plotting module and placed as separate images over the cell;
+  they are scaled down proportionally only if the cell can't fit them (these small schematics count as thumbnails, placed with `P.fitImage()`; result figures are never scaled). The last column's header is reworded for the endpoint.
+- **Group rows**: insert an empty row in the table, then lay a text box spanning the whole row over it, with the group name in bold accent color (not squeezed into the first column and wrapped).
+- **Row height**: estimated by greedy line wrapping of each cell's text (character widths taken from the wider substitute font, bold about 18% wider again), then the larger of that and the icon height,
+  so every icon lands in its own row in both renderers. Table frame height = sum of row heights.
+- **Rules**: there may be one line of 12 pt mid-gray explanation below the table; the conclusion sentence says "what question this group of features answers", not results.
 
-### 文字 / bullet 页
+![feature definition table layout](../../../examples/figures/layout_feature_table.png)
 
-- **用于**：背景、问题陈述、设计说明、局限。
-- **版式**：标题下一个 bullet 文本框（16–18 pt 灰，每条开头的关键短语加粗），底部结论框（y 5.95）。
-- **规则**：每条一个完整的意思，3–6 条；数字照样写来源（Source 行或文献引用）。
+### Text / bullet slide
 
-### 框架图 / 示意图
+- **Use for**: background, problem statement, design notes, limitations.
+- **Layout**: one bullet text box below the title (16–18 pt gray, the key phrase at the start of each item in bold), conclusion box at the bottom (y 5.95).
+- **Rules**: one complete idea per item, 3–6 items; numbers still get a source (Source line or reference).
 
-- **用于**：整套分析的总览（输入 → 处理带 → 输出）。
-- **版式**：用原生形状和文本框搭，不贴一整张图：每层处理是一条浅灰底的带，带内步骤用细灰线箭头串起，
-  带外表示输入输出的流向用粗的强调色箭头；多行共用同一个输入或输出时只画一个箭头指向中间。
-- **规则**：每个小图、图标是单独的图片对象，文字是原生文本框，以后能在 PowerPoint 里单独挪、单独改。
-  图标只用开放许可的，并登记出处（见 [figures.md](../../../shared/figures.md) §5–6）。
+![text slide layout](../../../examples/figures/layout_text_bullets.png)
 
-### 总结与局限
+### Framework diagram / schematic
 
-- **总结**：一行一条证据线（每种数据或每个问题一行），行之间一条细线。每行左边强调色 24 pt 粗体的名字，下面 12 pt 中灰的 n；
-  右边一句 17 pt 粗体的主张，再一两句灰色的证据（带数字）。每个数字都要能在前面的结果页找到。
-- **局限**：bullet 页（18 pt，每条开头的粗体短语点出局限是什么），结论句写这些结果的定性（如 *exploratory*）和下一步需要什么。
-- **规则**：总结里不出现前面没讲过的新数字；措辞照前面结果页的口径（candidate / nominal 不升级成 significant）。
+- **Use for**: an overview of the whole analysis (input → processing bands → output).
+- **Layout**: built from native shapes and text boxes, not pasted as one whole image: each processing layer is a band with a light-gray fill, steps within a band are linked by thin gray arrows (`P.thinArrow()`),
+  and flows into and out of the bands (inputs and outputs) use thick accent-color arrows (`P.thickArrow()`); when several rows share the same input or output, draw only one arrow, pointing at the middle.
+- **Rules**: every small image and icon is a separate picture object and all text is native text boxes, so each can later be moved and edited on its own in PowerPoint.
+  Use only openly licensed icons, and record their sources (see [figures.md](../../../shared/figures.md) §5–6).
 
-### Supplementary 页
+![framework diagram layout](../../../examples/figures/layout_framework.png)
 
-- **用于**：质量检查、次要终点、敏感性分析、被挪出主线但可能被问到的页。
-- **命名**：页标题写 `Supplementary — <主题>`，节 key 用 `supplementary`；不叫 Backup。
-- **版式**：和主稿同样的页型。放在 `SLIDES` 最后一节 `supplementary`，排在结束页之后。
-- **规则**：在 pptx 里设成隐藏（放映时跳过），PDF 里照样每页导出（做法见 [checks.md](checks.md)）。
-  主稿讲稿里提到 supplementary 页时写它的标题，不写「下一页」。
+### Summary and limitations
 
-## 3. 页面附件（chrome helper）
+- **Summary**: one row per line of evidence (one row per data type or per question), with a thin line between rows. Each row has a 24 pt bold accent-color name on the left with a 12 pt mid-gray n below it;
+  on the right, one 17 pt bold claim followed by one or two gray sentences of evidence (with numbers). Every number must be findable on an earlier result slide.
+- **Limitations**: a bullet slide (18 pt, a bold phrase at the start of each item naming the limitation); the conclusion sentence characterizes these results (e.g. *exploratory*) and says what is needed next.
+- **Rules**: the summary contains no new numbers that were not shown before; wording follows the earlier result slides (candidate / nominal is not upgraded to significant).
 
-下表的 helper 在 [examples/slides/common.js](../../../examples/slides/common.js) 里有，标「项目侧 / 第二期 engine 提供」的除外：那些 common.js 还没有，先在项目里自己写。
+![summary slide layout](../../../examples/figures/layout_summary.png)
 
-| helper | 做什么 | 格式 |
+### Other common slide types
+
+Geometry is taken from the page files of the example decks ([results](../../../examples/slides/results/slides/), [narrative](../../../examples/slides/narrative/slides/)); the key in the first column is the example page,
+whose speaker notes (`notes/<key>.md`) say when to use it. On slides without a main figure, the conclusion box is always at y 5.95.
+
+| Slide type | Use for | Layout |
 |---|---|---|
-| `source(slide, s)` | 右下角来源行 | `Source: GBSG2 trial (lifelines load_gbsg2); univariate Cox, recurrence-free survival` |
-| `cite(slide, keys)`（项目侧 / 第二期 engine 提供） | 右下角文献引用，从登记表 `REF`（同样项目侧 / 第二期 engine 提供）取，多条用分号隔开，可带前缀（`Figure: `） | `Surname, Given, et al. ` + *Journal* + ` vol.issue (year): pages`；机构作者不加 `et al.` |
-| `abbreviations(slide, …, entries)` | 缩写行，按给定顺序；条目少时可一条一行 | `HR: hazard ratio; CI: confidence interval; RFS: recurrence-free survival.` |
-| `draft(slide)` | ⚠️ 页的 DRAFT 标签 | `DRAFT – to be confirmed` |
-| `table(slide, x, y, colW, rowH, rows)` | 唯一的原生表格入口，三线表 | 见 [tables.md](../../../shared/tables.md) |
-| `newSlide(pres, title, n)` | 白底、标题、logo 占位、页码；把标题记进页表（写 `pages.json` 用）这一步是项目侧 / 第二期 engine 提供 | — |
+| Agenda (narrative `sAgenda`) | After the title slide, and again at the start of each section | ![](../../../examples/figures/layout_agenda.png) |
+| Section divider (narrative `sSectionDivider`) | Between two sections | ![](../../../examples/figures/layout_section_divider.png) |
+| One-sentence claim (narrative `sBigStatement`) | Start of the background, the one sentence the audience must accept first | ![](../../../examples/figures/layout_big_statement.png) |
+| Three columns: problem → approach → significance (narrative `sProblemApproachImpact`) | Study motivation | ![](../../../examples/figures/layout_three_columns.png) |
+| Figure + reading points (results `sAucTakeaways`) | A half-width figure that needs two or three hints on how to read it | ![](../../../examples/figures/layout_figure_takeaways.png) |
+| Native three-line table (results `sCohortTable`) | Cohort tables, a few numbers to be read cell by cell | ![](../../../examples/figures/layout_table.png) |
+| Key numbers (results `sKeyNumbers`) | At the start of the results section, or the one slide of the deck to remember; at most three numbers | ![](../../../examples/figures/layout_key_numbers.png) |
+| Two-column comparison (narrative `sComparison`) | Existing methods vs this study, compared criterion by criterion | ![](../../../examples/figures/layout_comparison.png) |
 
-- 文献登记表里每条只核对一次（作者、期刊、卷期、页码按文献数据库元数据），新文献先加进登记表再用。
-- 来源行和文献共用同一个位置：一页既有数据又有文献时合成一行、用分号隔开，不要两个 helper 都调（会叠在一起）。
+### Supplementary slides
+
+- **Use for**: quality checks, secondary endpoints, sensitivity analyses, slides moved out of the main line that may still be asked about.
+- **Naming**: the slide title is `Supplementary — <topic>`, the section key is `supplementary`; never called Backup.
+- **Layout**: the same slide types as the main deck. The pages declare `section: "supplementary"`, the section that `supplementary` in `deck.config.js` names; it comes after the closing section in `sections` (a credits section may follow it, as in the narrative example).
+- **Rules**: set to hidden in the pptx (skipped during the slideshow), still exported one page per slide in the PDF (how: see [checks.md](checks.md)).
+  When the main deck's speaker notes mention a supplementary slide, they give its title, not "the next slide".
+
+## 3. Slide chrome (chrome helpers)
+
+The helpers in the table below are in [engine/js/primitives.js](../engine/js/primitives.js); page files call them as `P.<helper>`, and every size, font and box comes from the theme.
+
+| helper | What it does | Format |
+|---|---|---|
+| `source(slide, s)` | Source line at the bottom right (box `geometry.source`) | `Source: GBSG2 trial (lifelines load_gbsg2); univariate Cox, recurrence-free survival` |
+| `cite(slide, refs)` | Reference citation at the bottom right, taken from the registry `refs` in `deck.config.js` (`{key: [author, journal, rest, isOrg?]}`); `refs` is a key or a list of keys and `[prefix, key]` pairs (e.g. `["Figure: ", key]`), joined by semicolons | `Surname, Given, et al. ` + *Journal* + ` vol.issue (year): pages`; no `et al.` for institutional authors |
+| `abbr(slide, entries, w, opts)` | Abbreviation line, `entries` = `[[abbr, expansion], …]` in the given order; `abbreviations(slide, x, y, w, h, entries)` is the older positional form with an explicit box | `HR: hazard ratio; CI: confidence interval; RFS: recurrence-free survival.` |
+| `draft(slide)` | DRAFT label for ⚠️ slides (box `geometry.draft`) | `DRAFT – to be confirmed` |
+| `table(slide, x, y, colW, rowH, rows, opts)` | The only entry point for native tables, three-line table | See [tables.md](../../../shared/tables.md) |
+| `newSlide(pres, title, n, opts)` | Background, title, logo (the theme's `asset.logo`, or a gray `YOUR LOGO` placeholder), page number; records `{page, title}` in the page log that build.js writes to `pages.json`; `{chrome: false}` for title-type slides, `{logo: false}` without the logo | — |
+
+- Each entry in the reference registry is checked only once (authors, journal, volume and issue, pages against the literature database's metadata); a new reference is added to the registry before it is used.
+- The source line and references share the same position: when a slide has both data and references, combine them into one line separated by a semicolon (`P.citeRuns(s, ["Source: …; ", ...P.refRuns(key)])`); don't call both helpers (they would overlap).

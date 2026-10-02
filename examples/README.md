@@ -1,41 +1,47 @@
+**English** | [简体中文](README.zh-CN.md)
+
 # examples
 
-`shared/` 和各 skill 文档里引用的示例：图、示例 deck、图标。数据和图标都是公开、可再分发的。
+Examples referenced in `shared/` and in the skill docs: figures, example decks, icons. All data and icons are public and redistributable.
 
-| 目录 | 内容 |
+| Directory | Contents |
 |---|---|
-| `figures/` | 示例图（PNG）和每张图一份的 `run_meta/<图名>.json`，由 [make_example_figures.py](make_example_figures.py) 生成 |
-| [slides/](slides/) | 经典页型的示例 deck：结果类（`results_examples`）和叙事类（`narrative_examples`），附 pptx、PDF 和逐页预览 |
-| [icons/](icons/README.md) | 开放许可图标（AI / LLM / VLM / Agent、计算病理、空间组学、通用科研），带 SVG、512 px PNG、总览图 `icon_sheet.png` |
+| `figures/` | Example figures (PNG) and one `run_meta/<figure name>.json` per figure, drawn by the [plotting/](plotting/__init__.py) package through the engine's [plot.py](../skills/results-deck/engine/tools/plot.py) |
+| [slides/](slides/) | Example decks of classic slide types: results (`results_examples`) and narrative (`narrative_examples`), with pptx, PDF and per-slide previews |
+| [icons/](icons/README.md) | Open-license icons (AI / LLM / VLM / Agent, computational pathology, spatial omics, general research), with SVG, 512 px PNG and the overview sheet `icon_sheet.png` |
 
-## 示例图
+## Example figures
 
-每张图都按它在 16:9 slide 上的实际尺寸画。结果图按整宽（12.1 × 4.6 in）或半宽（5.9 × 4.6 in）画；`slide_anatomy`（8.0 × 4.5）和 `three_line_table_example`（8.0 × 3.2）是示意用的小图：
+Every figure is drawn at its actual size on a 16:9 slide. Results figures are drawn full width (12.1 × 4.6 in) or half width (5.9 × 4.6 in); `layout_*` (8.0 × 4.5, i.e. 0.6 × the slide) and `three_line_table_example` (8.0 × 3.2) are small illustrative figures:
 
 ```bash
 cd research-skills
-python examples/make_example_figures.py                    # 全部；需要 matplotlib、numpy、pandas、lifelines、scikit-learn
-python examples/make_example_figures.py --only km_example  # 只画几张
+python skills/results-deck/engine/tools/plot.py examples                    # all; needs matplotlib, numpy, pandas, lifelines, scikit-learn
+python skills/results-deck/engine/tools/plot.py examples --only km_example  # only some
+python skills/results-deck/engine/tools/plot.py examples --list             # registered names and their modules
 ```
 
-| 注册名 | 内容 |
+`examples/` has no `deck.config.js`, so the neutral theme is used and the figures go to `figures/`. The package follows the engine layout ([SPEC.md](../skills/results-deck/engine/SPEC.md) §6): `style.py` (sizes, colors and fonts from the theme), `common.py` (data loading and statistics), and one figure module per group: `layouts.py` (`layout_*`), `survival.py` (`km_example`, `forest_example`), `discrimination.py` (`roc_example`, `auc_bars_example`), `tables.py` (`three_line_table_example`).
+
+| Registered name | Contents |
 |---|---|
-| `slide_anatomy` | 结果页的版面分区（标题、图框、结论句、来源行） |
-| `km_example` | 两个正方形 KM 面板：删失标记、at-risk 表、HR / Cox p / C-index / log-rank p |
-| `roc_example` | 两个正方形 ROC 面板：AUC [95% bootstrap CI]、n、阳性数 |
-| `auc_bars_example` | AUC 条形图，从 0.5（随机）起画 |
-| `forest_example` | 单变量 Cox 森林图，右侧三线表数字栏 |
-| `three_line_table_example` | 画进图里的三线表（队列基线特征） |
+| `layout_figure_conclusion` | Layout zones of the most common slide, figure + conclusion (title, figure frame, conclusion sentence, source line); the boxes state that the figure is drawn at its on-slide size and placed 1:1 |
+| `layout_*` | Layout zones of the other 16 slide types, drawn to scale, with the coordinates of the neutral theme ([theme.json](../skills/results-deck/engine/themes/neutral/theme.json)) and of the page files of the two example decks; embedded under each slide type in [slide-types.md](../skills/results-deck/reference/slide-types.md) |
+| `km_example` | Two square KM panels: censoring marks, at-risk table, HR / Cox p / C-index / log-rank p |
+| `roc_example` | Two square ROC panels: AUC [95% bootstrap CI], n, number of positives |
+| `auc_bars_example` | AUC bar chart, drawn from 0.5 (chance) |
+| `forest_example` | Univariable Cox forest plot, with a three-line-table number column on the right |
+| `three_line_table_example` | A three-line table drawn into a figure (cohort baseline characteristics) |
 
-- 数据：GBSG2 乳腺癌试验，686 例淋巴结阳性患者，终点是无复发生存，随 lifelines 一起发布（`lifelines.datasets.load_gbsg2`）。
-  - 数据来自 R 包 TH.data（GPL-2），由 lifelines（MIT）转发。本仓库不带数据文件：脚本运行时从 lifelines 读，只提交由它画出的图。
-  - 原始研究：Schumacher M, et al. *J Clin Oncol* 12.10 (1994): 2086–2093。
-  - 数据集的常用引用：Sauerbrei W, Royston P. *J R Stat Soc A* 162.1 (1999): 71–94。
-- bootstrap 用 2000 次重抽样、`random_state = 0`，记在各图的 run_meta 里。
-- 这里的数字只用来演示画法，不代表任何临床结论。
+- Data: the GBSG2 breast cancer trial, 686 node-positive patients, endpoint recurrence-free survival, shipped with lifelines (`lifelines.datasets.load_gbsg2`).
+  - The data come from the R package TH.data (GPL-2) and are redistributed by lifelines (MIT). This repo does not include the data file: the script reads it from lifelines at run time, and only the figures drawn from it are committed.
+  - Original study: Schumacher M, et al. *J Clin Oncol* 12.10 (1994): 2086–2093.
+  - Common citation for the dataset: Sauerbrei W, Royston P. *J R Stat Soc A* 162.1 (1999): 71–94.
+- The bootstrap uses 2000 resamples and `random_state = 0`, recorded in each figure's run_meta.
+- The numbers here only demonstrate how to draw the figures. They do not support any clinical conclusion.
 
-## 图标
+## Icons
 
-完整索引（每个图标的来源、许可、作者、原始 URL）见 [icons/README.md](icons/README.md)，逐个列表在 `icons/manifest.csv`。
-需要署名的 CC BY 图标在索引里单独列出；用到时，在那一页的来源行或 deck 的 credits 页写上署名。
-其他开放许可的图标库和各自的署名要求，见 [shared/figures.md](../shared/figures.md)「图标与外部图片」。
+For the full index (source, license, author and original URL of every icon), see [icons/README.md](icons/README.md); the per-icon list is in `icons/manifest.csv`.
+CC BY icons that require attribution are listed separately in the index. When you use one, write the attribution in that slide's source line or on the deck's credits slide.
+For other open-license icon libraries and their attribution requirements, see [shared/figures.md](../shared/figures.md), "Icons and external images".

@@ -1,102 +1,112 @@
-# 验证流程与踩过的坑
+**English** | [简体中文](checks.zh-CN.md)
 
-每次改页后至少做 §1–§3；挪页、增删页、改标题后加做 §7 的「页引用」；讲者改过讲稿后做 §7 的「讲稿是数据」。
-默认只验证自己改的那几节，整套 deck 的构建和逐页检查由集成者做（§8）。
+# Verification steps and known pitfalls
 
-## 1. 语法和结构
+After every slide change do at least §1–§3 (the self-check: a partial build of your own pages, the PNGs, the collision check); after moving, adding or deleting slides or changing titles, also do "Slide references" in §7; after the speaker has edited the speaker notes, do "Speaker notes are data" in §7.
+By default, verify only the pages you changed; building the full deck and checking every slide is done by the integrator (§8).
+`<engine>` below is `skills/results-deck/engine`, `<deck>` the deck directory and `$SCRATCH` your own scratch directory.
+
+## 1. Syntax and structure
 
 ```bash
-for f in js/*.js; do node --check "$f"; done                 # builder 语法
-node js/build_deck.js --sections results --out "$SCRATCH/results.pptx"
-python <pptx skill 目录>/scripts/office/validate.py "$SCRATCH/results.pptx"   # 要求 All validations PASSED
+node --check <deck>/slides/<key>.js                         # syntax of each changed page file
+node <engine>/js/build.js <deck> --only <key>[,<key>] --out "$SCRATCH/x.pptx" --png
+python <pptx skill directory>/scripts/office/validate.py "$SCRATCH/x.pptx"   # must report All validations PASSED
+python3 <engine>/tools/layout_check.py <deck> --pptx "$SCRATCH/x.pptx" --pdf "$SCRATCH/x.pdf" \
+        --pages-json "$SCRATCH/x.pages.json" --png-dir "$SCRATCH/flagged"
 ```
 
-- 结构检查用 Anthropic pptx skill 自带的 `validate.py`（装了才有；没装就跳过并在汇报里写明没做）。
-  LibreOffice 能打开不等于 PowerPoint 能打开，所以渲染通过不能代替这一步。
-- 构建先写临时文件，成功后才改名；中途失败（如缺图）时上一版输出原样保留。
+- The build first checks every page file (key, `section`, `order`, `build`; two pages of one section with the same `order`) and lists all problems at once (exit code 2). `--sections <section>[,<section>]` builds whole sections instead of `--only`.
+- A partial build (`--only` / `--sections`) needs `--out`, never writes the wip or a release and takes no lock; its footers carry the page numbers of the full deck. `--png` adds `x.pdf` and `x_png/<page>-<key>.png`; `x.pages.json` is always written next to `x.pptx`.
+- Structural checks use `validate.py` from the Anthropic pptx skill (only available if it is installed; if not, skip it and say in the report that it was not done).
+  LibreOffice being able to open a file does not mean PowerPoint can, so passing the render does not replace this step.
+- The build writes to a temporary file first and renames it only on success; if it fails midway (e.g. a missing figure), the previous output is left as it was.
 
-## 2. 渲染
+## 2. Rendering
+
+`--png` converts the pptx to PDF with its own LibreOffice profile and renders every page with `pdftoppm -r 60` to `<out stem>_png/<page>-<key>.png`. To render a pptx by hand (e.g. one the speaker edited), use:
 
 ```bash
 soffice -env:UserInstallation=file://$SCRATCH/lo_profile_$$ --headless \
-        --convert-to pdf --outdir "$SCRATCH" "$SCRATCH/results.pptx"
-pdftoppm -r 60 -png "$SCRATCH/results.pdf" "$SCRATCH/preview/page"
+        --convert-to pdf --outdir "$SCRATCH" "$SCRATCH/x.pptx"
+pdftoppm -r 60 -png "$SCRATCH/x.pdf" "$SCRATCH/preview/page"
 ```
 
-- **每次转换用独立的 LibreOffice profile**（`-env:UserInstallation=file://<唯一目录>`）：几个转换同时跑时共用默认 profile 会互相锁住，
-  表现为转换静默失败或卡住。
-- 预览写在自己的临时目录，不写 `output/`。60 dpi（和 examples/slides/render.sh 一致）够看版面；看小字或细线时对单页用 100–150 dpi。
-- 转换失败时只警告，不让构建失败：pptx 照常保留，旧 PDF 不动。
+- **Use a separate LibreOffice profile for every conversion** (`-env:UserInstallation=file://<unique directory>`): when several conversions run at once and share the default profile, they lock each other,
+  and the conversion silently fails or hangs. build.js already does this; `$DECK_SOFFICE` overrides where it looks for `soffice`.
+- Write previews to your own temporary directory, not `output/`. 60 dpi (the same as `--png` and examples/slides/render.sh) is enough to check layout; for small text or thin lines, render single slides at 100–150 dpi.
+- If conversion fails, only warn; don't fail the build: the pptx is kept as usual and the old PDF is left untouched.
 
-## 3. 逐页看 PNG
+## 3. Look at each PNG
 
-只看改过的页，每页过一遍：
+Look only at the changed slides, and go through each one:
 
-- [ ] 文字溢出或被截断（结论框超过 3 行、表格最后一行出框、bullet 掉出页面）
-- [ ] 元素重叠（标题折行压到图、结论框压到来源行、图标偏离自己那一行）
-- [ ] 图被拉伸、压扁或缩放（对比图的像素尺寸 / dpi 与放置尺寸）
-- [ ] 页脚缺失（来源行、页码）；⚠️ 页有 DRAFT 标签，✅ 页没有
-- [ ] 出现非英文文字（图里、页上、表格里）
-- [ ] 数字和大纲的 Message、来源表一致
+- [ ] Text overflowing or cut off (conclusion box over 3 lines, last table row outside the frame, bullets falling off the slide)
+- [ ] Overlapping elements (wrapped title running into the figure, conclusion box running into the source line, icons off their own row)
+- [ ] Figure stretched, squashed or scaled (compare the figure's pixel size / dpi with its placed size)
+- [ ] Missing footer (source line, page number); ⚠️ slides have the DRAFT label, ✅ slides don't
+- [ ] Any non-English text (in figures, on the slide, in tables)
+- [ ] Numbers match the outline's Message and the source table
 
-发现问题就改了重出，再看一遍；图本身的问题回画图代码改（见 SKILL.md「什么时候停下来问」）。
+When you find a problem, fix it, rebuild and look again; problems in the figure itself are fixed in the plotting code and redrawn with `plot.py <deck> --only <figure>` (see SKILL.md "[Stop and ask](../SKILL.md#stop-and-ask)").
 
-## 4. 字体与 z 序：预览和 PowerPoint 不一样的地方
+## 4. Fonts and z-order: where the preview differs from PowerPoint
 
-- **模板字体要装进系统**，否则 LibreOffice 用更宽的替代字体，长标题折成两行、结论句多一行，预览和 PowerPoint 对不上。
-  不需要 root：把字体文件放进用户字体目录 `~/.local/share/fonts/<字体名>/`，再 `fc-cache -f ~/.local/share/fonts`。
-  构建时检查字体在不在（`fc-list | grep <字体名>`），不在就打印一行警告。
-- **商业字体文件不提交、不再分发**：多数「可装在自己设备上使用」的许可不允许放进仓库。在文档里写清从哪里下载、装到哪里。
-- 装不了字体时：预览里放得下，PowerPoint 里一定放得下（替代字体更宽），但换行位置只是近似。
-- **主图放到 z 序最底**：图在标题之后加入，z 序就在标题之上，标题一折行第二行就被图盖住、在 PNG 里看不见。
-  主图 helper 加完图后立刻置底（同页多张图保持彼此顺序）；本来就该盖在形状上的图标、小图不动。
+- **Install the template fonts on the system**; otherwise LibreOffice uses a wider substitute font, long titles wrap to two lines, conclusion sentences gain a line, and the preview no longer matches PowerPoint.
+  No root needed: put the font files in the user font directory `~/.local/share/fonts/<font name>/`, then run `fc-cache -f ~/.local/share/fonts`.
+  Check whether the theme's fonts are present (`fc-list | grep <font name>`): `theme_from_pptx.py` warns about template fonts that are not installed, but build.js only warns when Arial (or Liberation Sans) is missing.
+- **Don't commit or redistribute commercial font files**: most "may be installed on your own devices" licenses don't allow putting them in a repository. Document where to download them and where to install them.
+- If the fonts can't be installed: whatever fits in the preview will fit in PowerPoint (the substitute font is wider), but line breaks are only approximate.
+- **Send the main figure to the bottom of the z-order**: a figure added after the title sits above the title in the z-order, so when the title wraps, its second line is hidden by the figure and invisible in the PNG.
+  `P.figure()` sends the figure to the back right after adding it (several figures on one slide keep their order relative to each other); icons and small images that are meant to sit on top of shapes are left alone.
 
-## 5. 自动碰撞检查（思路）
+## 5. Automatic collision check (`layout_check.py`)
 
-几十页逐页肉眼看容易漏，可以先用脚本筛一遍：
+Checking dozens of slides by eye one by one misses things; `<engine>/tools/layout_check.py` screens them first (default input: the wip pptx, PDF and pages.json; `--pptx` / `--pdf` / `--pages-json` for a partial build, `--pages` for some pages only):
 
-- 文字框：`pdftotext -bbox-layout <pdf>` 给出每一行渲染后的框（pt）。
-- 图片框和 z 序：从 pptx 的 slide XML 读每个 `p:pic` 的位置（EMU → pt）和它在 `spTree` 里的次序；
-  PDF 里的一行文字按内容匹配回 pptx 的文本框，得到它的 z 序。
-- 逐页报：标题行被 z 序更高的图盖住（hidden title）；标题和图相交但字在上面；标题折成 2 行以上及它到下一个元素的距离；
-  其他文字行与图相交超过 3 pt；两行文字框互相重叠。有问题的页渲成低分辨率 PNG 供目测。
-- **误报是预期的**：PNG 的白边或透明边、特意盖在图上的比例尺和标签、表格列里的图标都会被报成相交；
-  PDF 的行框比字形高。**最终以 PNG 为准**，脚本只决定先看哪几页。
+- Text boxes: `pdftotext -bbox-layout <pdf>` gives the rendered box (pt) of every line.
+- Image boxes and z-order: read each `p:pic`'s position (EMU → pt) and its order within `spTree` from the pptx slide XML;
+  match each text line in the PDF back to its pptx text box by content to get its z-order.
+- Report per slide: title line hidden under a figure higher in the z-order (hidden title); title and figure intersecting with the text on top; title wrapping to 2 or more lines and its distance to the next element;
+  other text lines intersecting a figure by more than 3 pt (`--tol`); two text-line boxes overlapping. `--png-dir` renders the flagged slides as low-resolution PNGs for a visual check.
+- **False positives are expected**: white or transparent margins in PNGs, scale bars and labels deliberately placed over figures, and icons in table columns are all reported as intersections;
+  PDF line boxes are taller than the glyphs. **The PNG is the final judge**; the script only decides which slides to look at first.
 
-## 6. Supplementary 页隐藏，PDF 照出
+## 6. Supplementary slides hidden, still in the PDF
 
-- `supplementary` 节的页在 pptx 里设成隐藏（slide XML 的 `show="0"`），放映时跳过。
-- LibreOffice 7.4 以前转 PDF 会**跳过隐藏页**，也没有导出隐藏页的选项。做法：转 PDF 前复制一份 pptx，去掉副本里的 `show="0"`，转副本。
-  pptx 保持隐藏，PDF 每页一张，页数与 `pages.json` 一致。
-- 核对：PDF 页数 = `pages.json` 条数。
+- Slides of the section named by `supplementary` in `deck.config.js` are set to hidden in the pptx (`show="0"` in the slide XML) and are skipped during the slideshow.
+- LibreOffice before 7.4 **skips hidden slides** when converting to PDF and has no option to export them. build.js therefore converts a temporary copy of the pptx with `show="0"` removed.
+  The pptx stays hidden, the PDF has one page per slide, and the page count matches `pages.json`.
+- Check: PDF page count = number of entries in `pages.json`.
 
-## 7. 页引用和讲稿
+## 7. Slide references and speaker notes
 
-**页引用**（挪页、增删页、改标题之后）：
+**Slide references** (after moving, adding or deleting slides or changing titles):
 
-1. 改 `SLIDES`（或 builder 里的标题）→ 整套构建（pptx + PDF + `pages.json`）；
-2. 重写大纲里的生成块（页码表、页数）；
-3. `--check`：不存在的 key、手写的 `P<数字>`、过期的生成块都要清零。
-4. 挪页工具可以把这几步串起来，并顺手往 `CHANGELOG.md` 追加一行；它只改 `SLIDES` 那一段，改前备份。
+1. Change the page files: `move.py <deck> <key> --after <key>` (or `--before <key>`, `--to <section>`) edits only that page's `section` / `order`; a title is changed in its page file; a page is added or deleted as `slides/<key>.js` (with `notes/<key>.md`).
+2. The integrator runs a full build (pptx + PDF + `pages.json`), then `pages.py <deck> --table --write` to rewrite the generated blocks in the outline (slide counts, page table).
+3. `pages.py <deck> --check`: unknown keys, hand-written `P<number>`, and stale generated blocks must all be zero.
+4. Record the move, rename, merge or deletion in `outline/CHANGELOG.md`; the chapter files describe only the current state.
 
-**讲稿是数据**：
+**Speaker notes are data**:
 
-- 讲稿存在 `notes.json`（`{builder key: 全文}`，按页序），构建时整段替换该页的 notes；没有条目的页用 builder 里的兜底文字。
-- 讲者在 PowerPoint 里改了讲稿后，**真相来源是讲者的 pptx**。同步脚本读 pptx 每页的备注，按页标题（左上第一个文本框）配 key：
-  第一页固定是标题页；然后查别名表；再按标题在 `pages.json` 里唯一匹配。配不上、重名、key 已被占用的页**不写**，
-  列进 unmatched 文件，加别名后重跑。先 `--dry-run` 看每个 key 是 identical / changed / new，再 `--write`。
-- 只读回纯文字：加粗、字号不保留；段落和软换行都变成换行。
-- pptxgenjs 把整段讲稿写成一个段落；构建后按换行拆成多个 `a:p`，PowerPoint 里的段落才和 JSON 一致。
-- **挪页后查讲稿里的相对引用**：「the next slide」「the previous slide」「the supplementary slide '…'」「Next, I'll show …」挪页后会悄悄变错。
-  用脚本把这些句子连同当前邻页（或被点名的页）的标题列出来，逐条人读；关键词重叠只是分诊，泛词会把错的判成对的。
-  脚本只报告不改：讲稿是讲者的，要改就在 pptx 里改，再同步。
-- 为版面从页上挪进讲稿的细节写成 `Note: …`，讲者能一眼看出哪些话页上没有。
+- Speaker notes are stored one file per slide in `notes/<key>.md` (plain UTF-8 text, one paragraph per line); at build time the file replaces that slide's notes as a whole; slides without a file keep the `slide.addNotes()` text of their page file.
+- Once the speaker has edited the notes in PowerPoint, **the speaker's pptx is the source of truth**. `pull_notes.py <deck> [pptx]` reads the notes of every slide in the pptx and matches keys by slide title:
+  the first slide is the title slide; then the alias table `notes/_aliases.json` is checked (a repeated title is addressed as `"<title>"`, `"<title>#2"` …); then the title is matched uniquely in `pages.json`. Slides that don't match, have repeated titles without an alias, or whose key is already taken are **not written**;
+  they are listed in `notes/_unmatched.json`, and you add aliases and rerun. First run `--dry-run` to see which keys are new, changed or unchanged; the integrator then runs `--write`, which backs up the files it changes to `.backups/` and never deletes a file.
+- Only plain text is read back: bold and font size are not kept; paragraphs and soft line breaks both become line breaks.
+- pptxgenjs writes the whole speaker-notes text as one paragraph; build.js splits it into several `a:p` at line breaks so the paragraphs in PowerPoint match the lines of `notes/<key>.md`.
+- **After moving slides, check relative references in the notes**: "the next slide", "the previous slide", "the supplementary slide '…'", "Next, I'll show …" silently become wrong when slides move.
+  `move.py` prints such wording found in the moved page and its old and new neighbors (page file and notes) as WARNINGs; read each one yourself against the titles of the current neighboring slides (or the slide named); keyword overlap is only triage, and generic words will make wrong ones look right.
+  The tool only reports and never edits the wording: the speaker notes belong to the speaker; any change is made in the pptx, then synced.
+- Details moved off the slide into the speaker notes for layout are written as `Note: …`, so the speaker can see at a glance which statements are not on the slide.
 
-## 8. wip、发布和并行改页
+## 8. wip, release and parallel slide editing
 
-- **整套构建写 wip**（`<deck>_wip.pptx`，连同 PDF 和 `pages.json`），每次覆盖；只由集成者跑。
-- **发布**：`--release` 写 `<deck>_v<N>.pptx`（+ PDF + `pages.json`），N = 现有最大版本号 + 1；文件名只带版本号不带日期；已发布的不覆盖、不删除。
-- **并行改页**：每个人 / agent 管自己的节和自己的 `slides_<block>.js`，只构建自己那几节到临时路径：
-  `node js/build_deck.js --sections <key>[,<key>] --out $SCRATCH/<名字>.pptx`。这种构建拒绝写 wip，页码是节内页码，默认不出 PDF。
-- 共享文件（`primitives.js`、`style.js`、`build_deck.js`、大纲索引）只做追加式修改，由集成者合并；不改已有函数的签名和行为。
-- 图的 run_meta 每张图一份、画图永远带 `--only`，并行画图不会互相覆盖。PDF 只和最近一次整套构建一样新。
+- **Full builds write wip** (`<outDir>/<name>_wip.pptx`, along with the PDF and `pages.json`), overwritten every time; they hold `<outDir>/.build.lock` (exit code 3 while another full build runs); only the integrator runs them.
+- **Release**: `--release` writes `<outDir>/<name>_v<N>.pptx` (+ PDF + `pages.json`), N = current highest version + 1; file names carry only the version number, no date; released files are never overwritten or deleted.
+- **Parallel slide editing**: each person / agent owns their own page files `slides/<key>.js`, their `notes/<key>.md`, their outline blocks and their plotting module, and builds only those pages to a temporary path:
+  `node <engine>/js/build.js <deck> --only <key>[,<key>] --out $SCRATCH/x.pptx --png`. Such a build refuses to write wip, takes no lock, numbers the footers with the full-deck page numbers, and produces no PDF unless `--png` or `--pdf` is given.
+- **Integrator-only steps**, run serially: the full build, `--release`, `move.py --respace <section>` (renumbers a whole section, so it edits several page files), `pages.py --table --write`, `pull_notes.py --write`, `plot.py <deck>` without `--only` (after a theme change), and commits. A commit lists its paths explicitly; **never `git add -A`**, which would also commit files another agent has half edited.
+- Shared files (`primitives.js`, `build.js`, `theme/`, `deck.config.js`, `slides/_lib/`, `plotting/style.py`, `plotting/common.py`, the outline index) get append-only changes, merged by the integrator; existing functions' signatures and behavior are not changed.
+- Each figure has its own run_meta and plotting always uses `--only`, so parallel plotting runs never overwrite each other. The PDF is only as new as the latest full build.

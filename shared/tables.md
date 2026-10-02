@@ -1,26 +1,28 @@
-# 表格：三线表
+**English** | [简体中文](tables.zh-CN.md)
 
-产出里的表格（slide、图、论文、报告）都用三线表：deck 的原生表格、画进图里的表、森林图右侧的数字栏、论文表格。只有用户特别说明时才例外。
-本仓库文档里的 markdown 表格不在此列：markdown 画不出三线表。
+# Tables: three-line tables
 
-## 规则
+Tables in outputs (slides, figures, papers, reports) are all three-line tables: native deck tables, tables drawn into figures, the number columns to the right of forest plots, and paper tables. The only exception is when the user says otherwise.
+Markdown tables in this repository's docs are not covered: markdown cannot draw three-line tables.
 
-- 只有三条横线：顶线（粗）、表头下线（细）、底线（粗）。不画竖线、内部横线，也不填底色。
-- 第一列左对齐；其余列居中，表头和下面的数值共用同一个列中心。
-- 表头加粗，字号和正文一样。分组标签行可以用强调色加粗，横跨整行写，不挤在第一列里折行。
-- 数字格式按 [numbers-and-sources.md](numbers-and-sources.md)：同一列小数位数一致，区间用 en dash。
+## Rules
 
-![三线表示例](../examples/figures/three_line_table_example.png)
+- Only three horizontal rules: top rule (thick), rule under the header (thin), bottom rule (thick). No vertical lines, no inner horizontal lines, no background fill.
+- First column left-aligned; the other columns centered, with the header and the values below it sharing the same column center.
+- Header in bold, at the same font size as the body. Group label rows may be bold in the accent color, written across the whole row, not squeezed into the first column and wrapped.
+- Number formats follow [numbers-and-sources.md](numbers-and-sources.md): the same number of decimals within a column, intervals with an en dash.
 
-## 实现
+![Three-line table example](../examples/figures/three_line_table_example.png)
 
-**matplotlib**（画进图里的表）：
-- 用 `ax.text` 摆字：第一列 `ha="left"`，其余列 `ha="center"`。
-- 再画三条横线：顶线 / 底线 1.5 pt，表头下线 0.75 pt。
-- 横线和文字要用同一套坐标，并固定 `xlim` / `ylim`；否则 `plot` 会把数据范围撑变，文字跑到画面外。
-- 完整例子见 [examples/make_example_figures.py](../examples/make_example_figures.py) 的 `fig_table()`。
+## Implementation
 
-**pptxgenjs**（deck 原生表格）：逐格设边框，`border: [top, right, bottom, left]`：
+**matplotlib** (tables drawn into figures):
+- Place the text with `ax.text`: first column `ha="left"`, other columns `ha="center"`.
+- Then draw the three rules: top / bottom rules 1.5 pt, header rule 0.75 pt.
+- Rules and text must use the same coordinates, with `xlim` / `ylim` fixed; otherwise `plot` stretches the data range and the text ends up outside the canvas.
+- For a full example see `fig_table()` in [examples/plotting/tables.py](../examples/plotting/tables.py).
+
+**pptxgenjs** (native deck tables): set borders cell by cell, `border: [top, right, bottom, left]`:
 
 ```js
 const none = { type: "none" };
@@ -33,8 +35,8 @@ const bottom = i === last ? outer : i === 0 ? mid : none;
 options = { align: j === 0 ? "left" : "center", valign: "middle", border: [top, none, bottom, none] };
 ```
 
-另外显式传表框高度 `h`，取各行行高之和；不传的话 pptxgenjs 写出 1 in 的表框。
+Also pass the table frame height `h` explicitly, as the sum of the row heights; without it pptxgenjs writes a 1 in table frame.
 
-**LaTeX**：`booktabs` 宏包，`\toprule`、`\midrule`、`\bottomrule`，列格式 `l c c c`，不用 `|` 和 `\hline`。
+**LaTeX**: the `booktabs` package, `\toprule`, `\midrule`, `\bottomrule`, column spec `l c c c`; no `|` and no `\hline`.
 
-**Word / docx**：表格边框只留表头上下边和最后一行下边，其余设为无；第一列左对齐，其余列居中。
+**Word / docx**: keep only the table borders above and below the header row and below the last row, and set all others to none; first column left-aligned, the other columns centered.
